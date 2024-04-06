@@ -10,11 +10,9 @@ def get_abstracts_iteratively(paper_id):
     # Find arXiv IDs within the references text
     arxiv_ids = ArxivDataExtractor.find_arxiv_ids_in_text(references_text)
     arxiv_ids.append(paper_id)
-    print("Found arXiv IDs:", arxiv_ids)
     # Get the abstracts of the cited papers
     for arxiv_id in arxiv_ids:
         abstract = ArxivDataExtractor.get_paper_abstract_from_web(arxiv_id)
-        print(abstract)
 
 def main():
     get_abstracts_iteratively("2404.00459")
