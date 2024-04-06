@@ -9,6 +9,7 @@
 
 ## Setup
 To setup local environment:
+- create a folder called "papers_cache"
 - python -m venv env (if it does not run, open powershell as admin and do it in the project's root folder)
 - .\env\Scripts\activate
 - pip install -r requirements.txt
