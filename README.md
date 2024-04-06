@@ -20,3 +20,11 @@ To setup local environment:
 - https://github.com/kandiraju/arxiv_data_extraction
 - https://github.com/lukasschwab/arxiv.py
  
+----
+
+## Run UI
+```
+docker-compose build
+docker-compose up
+```
+Open an incognito window and go to localhost:5000.
