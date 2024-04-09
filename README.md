@@ -28,3 +28,8 @@ docker-compose build
 docker-compose up
 ```
 Open an incognito window and go to localhost:5000.
+
+To close container, type: (Stops all running containers at once)
+```
+docker stop $(docker ps -aq)
+```
