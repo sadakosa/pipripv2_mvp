@@ -13,7 +13,7 @@ class Paper:
         self.references = []
 
     # Alternative constructor to instantiate the Paper using a json, for avoiding repeated API calls
-    # Usage: paper = Paper.from_json("file_name.json")
+    # Usage: paper = Paper.from_json("papers_cache/paper_id.json")
     @classmethod
     def from_json(cls, json_path):
         with open(json_path, 'r') as json_file:

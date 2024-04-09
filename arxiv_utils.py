@@ -50,7 +50,7 @@ def extract_references_from_pdf(pdf_path):
             text = page.extract_text()
             if text:
                 # Check if we've reached the References section
-                if 'References' in text or references_started:
+                if 'References' in text or 'REFERENCES' in text or references_started:
                     references_started = True
                     collected_text.append(text)
 

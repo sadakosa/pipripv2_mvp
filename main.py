@@ -1,6 +1,6 @@
 # pull together the abstract extractor, and pdf downloader and references extractor to get the abstracts and retreive any cited arxiv files with 1 depth length.id
 
-from arxiv_utils import load_papers_from_arxiv
+from arxiv_utils import load_papers_from_arxiv, extract_references_from_pdf, find_arxiv_ids_in_text
 from paper import Paper
 
 
@@ -20,8 +20,12 @@ def main():
     # papers = load_papers_from_arxiv(["2404.00459", "2304.03442"])
     # for p in papers:
     #     p.save_as_json()
-    for path in ["papers_cache/2304.03442v2.json", "papers_cache/2404.00459v1.json"]:
-        paper = Paper.from_json(path)
+    # for path in ["papers_cache/2304.03442v2.json", "papers_cache/2404.00459v1.json"]:
+    #     paper = Paper.from_json(path)
+    refs = extract_references_from_pdf("./papers_cache/2304.03442v2.pdf")
+    print(refs)
+    arxiv_ids = find_arxiv_ids_in_text(refs)
+    print(arxiv_ids)
 
 if __name__ == "__main__":
     main()
