@@ -19,7 +19,7 @@ To setup local environment:
 ## Potential libraries to use
 - https://github.com/kandiraju/arxiv_data_extraction
 - https://github.com/lukasschwab/arxiv.py
- 
+- https://github.com/memgraph/sng-demo (Social Network Graph)
 ----
 
 ## Run UI
