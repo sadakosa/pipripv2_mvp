@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+from arxiv_utils import extract_references_from_pdf, find_arxiv_ids_in_text, search_papers_by_arxiv_id
+
 
 class Paper:
     def __init__(self, arxiv_result):
@@ -10,7 +12,7 @@ class Paper:
         self.authors = [a.name for a in arxiv_result.authors]
         self.publication_date = arxiv_result.published
         self.last_updated = arxiv_result.updated
-        self.references = []
+        self.references = []  # list of Paper objects which this paper cites
 
     # Alternative constructor to instantiate the Paper using a json, for avoiding repeated API calls
     # Usage: paper = Paper.from_json("papers_cache/paper_id.json")
@@ -47,3 +49,24 @@ class Paper:
         with open(file_path, 'w') as json_file:
             json.dump(paper_metadata, json_file, indent=4)
             print(f"Saved {file_path}.")
+
+    # Manually parse references from downloaded pdf (slow and might be inaccurate depending on citation style)
+    # If the references contain arxiv IDs, batch the IDs and send arxiv request to flesh out contents
+    def populateReferencesUsingPdf(self, pdf_path):
+        references_block = extract_references_from_pdf(pdf_path)
+        arxiv_ids = find_arxiv_ids_in_text(references_block)
+        results = search_papers_by_arxiv_id(arxiv_ids, download=False)
+        for res in results:
+            referenced_paper = Paper(res)
+            self.references.append(referenced_paper)
+
+    # Search for the article on Google Scholar and populate references if found
+    # Unfortunately the payload does not contain full abstracts of the papers
+    # If the resource contains an arxiv paper ID, more metadata can be retrieved from arxiv
+    def populateReferencesUsingGoogleScholar(self):
+        pass
+
+    # Dev only: Writes out DB queries to convert the paper and references to nodes
+    # Citation edges are generated for the paper node and its reference nodes
+    def writeCypherQueries(self):
+        pass

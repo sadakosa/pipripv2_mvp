@@ -7,8 +7,6 @@ import pdfplumber
 import re
 import os
 
-from paper import Paper
-
 
 def get_paper_abstract_from_web(paper_id):
     # Define the base URL for the arXiv paper
@@ -23,23 +21,21 @@ def get_paper_abstract_from_web(paper_id):
 
     return abstract_text
 
-def load_papers_from_arxiv(paper_ids, save_directory="papers_cache", download=True):
+def search_papers_by_arxiv_id(paper_ids, save_directory="papers_cache", download=True):
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
 
     arxiv_client = Client()
 
-    papers = []
     results = arxiv_client.results(Search(id_list=paper_ids))
-    for res in results:
-        pdf_url = res.pdf_url
-        if pdf_url and download:
-            paper_id = pdf_url.split('/')[-1]  # Extract paper ID from URL
-            res.download_pdf(dirpath=save_directory, filename=paper_id + ".pdf")
-            print(f"Downloaded {res.title} as {save_directory}/{paper_id}.pdf")
-        paper = Paper(res)
-        papers.append(paper)
-    return papers
+    # for res in results:
+    #     pdf_url = res.pdf_url
+    #     if pdf_url and download:
+    #         paper_id = pdf_url.split('/')[-1]  # Extract paper ID from URL
+    #         res.download_pdf(dirpath=save_directory, filename=paper_id + ".pdf")
+    #         print(f"Downloaded {res.title} as {save_directory}/{paper_id}.pdf")
+
+    return results
 
 def extract_references_from_pdf(pdf_path):
     references_started = False
