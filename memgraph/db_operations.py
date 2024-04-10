@@ -14,22 +14,25 @@ def populate_database(db, path):
         if len(line.strip()) != 0 and line[0] != '/':
             db.execute_query(line)
 
+# Execute Cypher query to link papers which share at least one common author
+# def generate_shared_author_edges(db):
+#     pass
 
-def get_users(db):
-    command = "MATCH (n:User) RETURN n;"
-    users = db.execute_and_fetch(command)
+def get_nodes(db):
+    command = "MATCH (n:Node) RETURN n;"
+    nodes = db.execute_and_fetch(command)
 
-    user_objects = []
-    for user in users:
-        u = user['n']
-        data = {"id": u.properties['id'], "name": u.properties['name']}
-        user_objects.append(data)
+    node_objects = []
+    for node in nodes:
+        n = node['n']
+        data = {"id": n.properties['id'], "name": n.properties['title']}
+        node_objects.append(data)
 
-    return json.dumps(user_objects)
+    return json.dumps(node_objects)
 
 
 def get_relationships(db):
-    command = "MATCH (n1)-[e:FRIENDS]-(n2) RETURN n1,n2,e;"
+    command = "MATCH (n1)-[e:is_cited_by]-(n2) RETURN n1,n2,e;"
     relationships = db.execute_and_fetch(command)
 
     relationship_objects = []
@@ -37,15 +40,15 @@ def get_relationships(db):
         n1 = relationship['n1']
         n2 = relationship['n2']
 
-        data = {"userOne": n1.properties['name'],
-                "userTwo": n2.properties['name']}
+        data = {"userOne": n1.properties['title'],
+                "userTwo": n2.properties['title']}
         relationship_objects.append(data)
 
     return json.dumps(relationship_objects)
 
 
 def get_graph(db):
-    command = "MATCH (n1)-[e:FRIENDS]-(n2) RETURN n1,n2,e;"
+    command = "MATCH (n1)-[e:is_cited_by]-(n2) RETURN n1,n2,e;"
     relationships = db.execute_and_fetch(command)
 
     link_objects = []
@@ -58,13 +61,13 @@ def get_graph(db):
 
         n1 = relationship['n1']
         if not (n1.id in added_nodes):
-            data = {"id": n1.id, "name": n1.properties['name']}
+            data = {"id": n1.id, "name": n1.properties['title']}
             node_objects.append(data)
             added_nodes.append(n1.id)
 
         n2 = relationship['n2']
         if not (n2.id in added_nodes):
-            data = {"id": n2.id, "name": n2.properties['name']}
+            data = {"id": n2.id, "name": n2.properties['title']}
             node_objects.append(data)
             added_nodes.append(n2.id)
     data = {"links": link_objects, "nodes": node_objects}

@@ -30,8 +30,9 @@ def main():
     # arxiv_ids = find_arxiv_ids_in_text(refs)
 
     paper = Paper.from_json("papers_cache/2304.03442v2.json")
-    paper.populateReferencesUsingPdf("papers_cache/2304.03442v2.pdf")
-    print(paper.references)
+    # paper.populateReferencesUsingPdf("papers_cache/2304.03442v2.pdf")
+    # print(paper.references)
+    paper.writeCypherQueries()
 
 if __name__ == "__main__":
     main()

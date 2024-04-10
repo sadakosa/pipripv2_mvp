@@ -68,5 +68,13 @@ class Paper:
 
     # Dev only: Writes out DB queries to convert the paper and references to nodes
     # Citation edges are generated for the paper node and its reference nodes
+    # TODO: handle special characters like ' from strings as they result in invalid queries
     def writeCypherQueries(self):
-        pass
+        # self.references = [Paper.from_json("papers_cache/2404.00459v1.json")]
+        f = open("resources/dev_data.txt", "w+")
+        main_paper_query = f"CREATE (n:Node {{ id: '{self.paper_id}', title: '{self.title}', authors: {self.authors}, publication_date: '{self.publication_date}'}});\n"
+        f.write(main_paper_query)
+        for r in self.references:
+            f.write(f"CREATE (n:Node {{ id: '{r.paper_id}', title: '{r.title}', authors: {r.authors}, publication_date: '{r.publication_date}'}});\n")
+            f.write(f"MATCH (n1:Node {{id: '{r.paper_id}'}}), (n2:Node {{id: '{self.paper_id}'}}) CREATE (n1)-[:is_cited_by]->(n2);\n")  # edge
+        f.close()
