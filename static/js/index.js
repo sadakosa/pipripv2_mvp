@@ -30,31 +30,32 @@
         .data(responseJSON.links)
         .enter().append("line");
 
-    var path = svg.append("svg:g")
-        .attr("class", "paths")
-        .selectAll("path")
-        .data(responseJSON.links)
-        .enter().append("svg:path")
-        .attr("id",function(d,i) { return "linkId_" + i; })
-        .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+    // ++ @gl changes 
+    // var path = svg.append("svg:g")
+    //     .attr("class", "paths")
+    //     .selectAll("path")
+    //     .data(responseJSON.links)
+    //     .enter().append("svg:path")
+    //     .attr("id",function(d,i) { return "linkId_" + i; })
+    //     .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
 
-    var linktext = svg.append("svg:g")
-        .attr("class", "linklabels")
-        .selectAll("g.linklabelholder")
-        .data(responseJSON.links)
-        .enter().append("g")
-        .attr("class", "linklabelholder")
-        .append("text")
-        .style("font-size", "9px")
-        .attr("text-anchor", "middle")
-        .attr("dx", 50)
-        .attr("dy", 5)
-        .style("fill","black")
-        .append("textPath")
-        .attr("xlink:href",function(d,i) { return "#linkId_" + i;})
-        .text(function(d) {
-            return "my text"; //Can be dynamic via d object
-        });
+    // var linktext = svg.append("svg:g")
+    //     .attr("class", "linklabels")
+    //     .selectAll("g.linklabelholder")
+    //     .data(responseJSON.links)
+    //     .enter().append("g")
+    //     .attr("class", "linklabelholder")
+    //     .append("text")
+    //     .style("font-size", "9px")
+    //     .attr("text-anchor", "middle")
+    //     .attr("dx", 50)
+    //     .attr("dy", 5)
+    //     .style("fill","black")
+    //     .append("textPath")
+    //     .attr("xlink:href",function(d,i) { return "#linkId_" + i;})
+    //     .text(function(d) {
+    //         return "my text"; //Can be dynamic via d object
+    //     });
 
     var node = svg.selectAll(".node")
         .data(responseJSON.nodes)
@@ -65,11 +66,12 @@
             .on("drag", dragged)
             .on("end", dragended));
 
-    node.append("circle").attr("r", 5).attr("fill", "darkgray");
-    node.append("text").attr("dx", 6).text(function(d) { return d.name; });
+    // ++ @gl changes 
+    // node.append("circle").attr("r", 5).attr("fill", "darkgray");
+    // node.append("text").attr("dx", 6).text(function(d) { return d.name; });
 
-//    node.append("title")
-//        .text(function(d) { return d.name; });
+   node.append("title")
+       .text(function(d) { return d.name; });
 
     simulation
         .nodes(responseJSON.nodes)
@@ -89,11 +91,12 @@
     }
 
     function ticked() {
-        path.attr("d", function(d) {
-            var dx = d.target.x - d.source.x,
-                dy = d.target.y - d.source.y;
-            return "M" + d.source.x + "," + d.source.y + " L" + d.target.x + "," + d.target.y;
-        });
+        // ++ @gl changes 
+        // path.attr("d", function(d) {
+        //     var dx = d.target.x - d.source.x,
+        //         dy = d.target.y - d.source.y;
+        //     return "M" + d.source.x + "," + d.source.y + " L" + d.target.x + "," + d.target.y;
+        // });
 
         link
             .attr("x1", function(d) { return d.source.x; })
@@ -105,9 +108,10 @@
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
 
-        node.attr("transform", function(d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        });
+        // ++ @gl changes 
+        // node.attr("transform", function(d) {
+        //     return "translate(" + d.x + "," + d.y + ")";
+        // });
     }
 
     function dragstarted(d) {
