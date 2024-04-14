@@ -56,22 +56,25 @@ def get_relationships(db):
 
 def paper_or_topic(node):
     if 'author' in node.properties:
-        data = {"type": "paper", "id": node.properties['id'], "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
+        # data = {"type": "paper", "id": node.properties['id'], "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
+        data = {"type": "paper", "id": node.id, "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
         return data
     else:
-        data = {"type": "topic", "id": node.properties['id'], "name": node.properties['name'], "summary": node.properties['summary']}
+        # data = {"type": "topic", "id": node.properties['id'], "name": node.properties['name'], "summary": node.properties['summary']}
+        data = {"type": "topic", "id": node.id, "name": node.properties['name'], "summary": node.properties['summary']}
         return data
 
 def get_graph(db):
     command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, r, n2, labels(n2) AS n2_labels;"
     relationships = db.execute_and_fetch(command)
-    print("I am here")
+    print("in get_graph")
 
     link_objects = []
     node_objects = []
     added_nodes = []
     for relationship in relationships:
         r = relationship['r']
+        # print(r)
         data = {"source": r.nodes[0], "target": r.nodes[1]}
         link_objects.append(data)
 

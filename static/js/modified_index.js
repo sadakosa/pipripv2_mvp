@@ -24,6 +24,7 @@
     var g = svg.append("g")
         .attr("class", "everything");
 
+    // -- replaced by @gl changes
     var link = g.append("g")
         .attr("class", "links")
         .selectAll("line")
@@ -31,8 +32,8 @@
         .enter().append("line");
 
     var node = g.append("g")
-        .attr("class", "nodes") //applies class="nodes" to all selected elements (to use the css defined for class=nodes)
-        .selectAll("circle")
+        .attr("class", "node")
+        .selectAll(".nodes")
         .data(responseJSON.nodes)
         .enter().append("circle")
         .attr("r", 5.0)
@@ -43,9 +44,55 @@
             .on("end", dragended));
 
     node.append("title")
-        .text(function(d) { 
-            return d.name + "\nSummary: " + d.summary;
-        });
+       .text(function(d) { return d.name; });
+    // -- replaced by @gl changes
+
+    // ++ @gl changes start here
+    // var link = svg.append("g")
+    //     .attr("class", "links")
+    //     .selectAll("line")
+    //     .data(responseJSON.links)
+    //     .enter().append("line");
+
+    // var path = svg.append("svg:g")
+    //     .attr("class", "paths")
+    //     .selectAll("path")
+    //     .data(responseJSON.links)
+    //     .enter().append("svg:path")
+    //     .attr("id",function(d,i) { return "linkId_" + i; })
+    //     .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+    // var linktext = svg.append("svg:g")
+    //     .attr("class", "linklabels")
+    //     .selectAll("g.linklabelholder")
+    //     .data(responseJSON.links)
+    //     .enter().append("g")
+    //     .attr("class", "linklabelholder")
+    //     .append("text")
+    //     .style("font-size", "9px")
+    //     .attr("text-anchor", "middle")
+    //     .attr("dx", 50)
+    //     .attr("dy", 5)
+    //     .style("fill","black")
+    //     .append("textPath")
+    //     .attr("xlink:href",function(d,i) { return "#linkId_" + i;})
+    //     .text(function(d) {
+    //         return "my text"; //Can be dynamic via d object
+    //     });
+
+    // var node = g.selectAll(".node")
+    //     .data(responseJSON.nodes)
+    //     .enter().append("g")
+    //     .attr("class", "node")
+    //     .call(d3.drag()
+    //         .on("start", dragstarted)
+    //         .on("drag", dragged)
+    //         .on("end", dragended));
+     
+    // node.append("circle").attr("r", 5).attr("fill", "darkgray");
+    // node.append("text").attr("dx", 6).text(function(d) { return d.name; });
+    // ++ @gl changes end here
+
 
     simulation
         .nodes(responseJSON.nodes)
@@ -54,7 +101,7 @@
     simulation
         .force("link")
         .links(responseJSON.links);
-        
+
     var zoom_handler = d3.zoom()
         .on("zoom", zoom_actions);
 
@@ -65,6 +112,14 @@
     }
 
     function ticked() {
+        // ++ @gl changes start here
+        // path.attr("d", function(d) {
+        //     var dx = d.target.x - d.source.x,
+        //         dy = d.target.y - d.source.y;
+        //     return "M" + d.source.x + "," + d.source.y + " L" + d.target.x + "," + d.target.y;
+        // });
+        // ++ @gl changes end here
+
         link
             .attr("x1", function(d) { return d.source.x; })
             .attr("y1", function(d) { return d.source.y; })
@@ -74,6 +129,12 @@
         node
             .attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; });
+
+        // ++ @gl changes start here
+        // node.attr("transform", function(d) {
+        //     return "translate(" + d.x + "," + d.y + ")";
+        // });
+        // ++ @gl changes end here
     }
 
     function dragstarted(d) {
