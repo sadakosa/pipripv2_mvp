@@ -25,7 +25,7 @@ def get_nodes(db):
     node_objects = []
     for node in nodes:
         n = node['n']
-        data = {"id": n.properties['id'], "name": n.properties['title']}
+        data = {"id": n.properties['id'], "name": n.properties['name'], "summary": n.properties['summary']}
         node_objects.append(data)
 
     return json.dumps(node_objects)
