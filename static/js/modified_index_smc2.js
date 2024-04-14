@@ -32,7 +32,16 @@
         .selectAll("line")
         .data(responseJSON.links)
         .enter().append("line");
-
+        
+    // Append text labels to each link
+    var linkLabel = g.append("g")
+        .attr("class", "link-labels")
+        .selectAll("text")
+        .data(responseJSON.links)
+        .enter().append("text")
+        .attr("text-anchor", "middle") // Ensure labels are centered along the link
+        .attr("font-size", "10px")
+        .text(d => d.relationship_type || ""); 
     
     var node = g.append("g")
         .attr("class", "node")
@@ -68,10 +77,8 @@
     node.append("title")
         .text(d => {
             if (d.type === "topic") {
-                // If the node is of type "topic", include only the name and summary
                 return `Name: ${d.name}\nSummary: ${d.summary}`;
             } else if (d.type === "paper") {
-                // If the node is of type "paper", include the author, name, title, and summary
                 return `Author: ${d.author}\nName: ${d.name}\nTitle: ${d.title}\nSummary: ${d.summary}`;
             }
         });
@@ -171,6 +178,7 @@
         //     return "translate(" + d.x + "," + d.y + ")";
         // });
         // ++ @gl changes end here
+        
         // Position the link labels at the midpoint of each link
         linkLabel
             .attr("x", d => (d.source.x + d.target.x) / 2)
