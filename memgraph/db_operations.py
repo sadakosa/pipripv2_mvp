@@ -65,7 +65,7 @@ def paper_or_topic(node):
         return data
 
 def get_graph(db):
-    command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, r, n2, labels(n2) AS n2_labels;"
+    command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS relationship_type, r, n2, labels(n2) AS n2_labels;"
     relationships = db.execute_and_fetch(command)
     print("in get_graph")
 
@@ -75,7 +75,7 @@ def get_graph(db):
     for relationship in relationships:
         r = relationship['r']
         # print(r)
-        data = {"source": r.nodes[0], "target": r.nodes[1]}
+        data = {"source": r.nodes[0], "target": r.nodes[1], "relationship_type": relationship['relationship_type']}
         link_objects.append(data)
 
         n1 = relationship['n1']
