@@ -3,6 +3,7 @@ import json
 
 def clear(db):
     command = "MATCH (node) DETACH DELETE node"
+    print("clearing database")
     db.execute_query(command)
 
 
@@ -79,18 +80,31 @@ def get_graph(db):
         link_objects.append(data)
 
         n1 = relationship['n1']
-        n1_label = relationship['n1_labels'][0]
-        if not (str(n1.id) + n1_label in added_nodes):
+        if not (n1.id in added_nodes):
             data = paper_or_topic(n1)
             node_objects.append(data)
-            added_nodes.append(str(n1.id) + n1_label)
+            added_nodes.append(n1.id)
 
         n2 = relationship['n2']
-        n2_label = relationship['n2_labels'][0]
-        if not (str(n2.id) + n2_label in added_nodes):
+        if not (n2.id in added_nodes):
             data = paper_or_topic(n2)
             node_objects.append(data)
-            added_nodes.append(str(n2.id) + n2_label)
+            added_nodes.append(n2.id)
+
+        # old code to identify nodes by given_id and label (but changed to use neo4j db id only as shown above)
+        # n1 = relationship['n1']
+        # n1_label = relationship['n1_labels'][0]
+        # if not (str(n1.id) + n1_label in added_nodes):
+        #     data = paper_or_topic(n1, n1_label)
+        #     node_objects.append(data)
+        #     added_nodes.append(str(n1.id) + n1_label)
+
+        # n2 = relationship['n2']
+        # n2_label = relationship['n2_labels'][0]
+        # if not (str(n2.id) + n2_label in added_nodes):
+        #     data = paper_or_topic(n2, n2_label)
+        #     node_objects.append(data)
+        #     added_nodes.append(str(n2.id) + n2_label)
 
     data = {"links": link_objects, "nodes": node_objects}
 

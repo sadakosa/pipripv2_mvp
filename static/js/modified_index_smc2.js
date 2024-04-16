@@ -15,7 +15,6 @@
 
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(150)) // Increase the distance value to spread out the nodes
-        //.force("link", d3.forceLink().id(function(d) { return d.id; })) // previous line that the above line replaces
         .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
@@ -69,7 +68,7 @@
         .attr("x", 0)  // Center text horizontally on the circle's center
         .attr("y", ".31em")  // Center text vertically relative to circle
         .attr("text-anchor", "middle")  // Align text around its middle point
-        .text(d => d.name)  // Set the text to be the node's name
+        .text(d => d.name)
         .style("font-size", "12px")
         .style("font-family", "Arial, sans-serif");
     
