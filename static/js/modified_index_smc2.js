@@ -1,4 +1,7 @@
+import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
+
 (async() => {
+    // === Fetch data about graph (nodes and links)
     let response = await fetch(`${window.origin}/get-graph`, {
         method: "POST",
         credentials: "include",
@@ -9,6 +12,25 @@
         })
     });
 
+    let responseString = await response.json();
+    let responseJSON = JSON.parse(responseString);
+
+    let d3nodes = [];
+    for (node of responseJSON.nodes) {
+        if (node.type === "topic") {
+            d3nodes.push(new D3TopicNode(node.id, node.name, node.summary));
+        } else {
+            d3nodes.push(new D3PaperNode(node.id, node.name, node.author, node.title, node.summary));
+        }
+    }
+    let d3links = [];
+    for (link of responseJSON.links) {
+        d3links.push(new D3Link(link.source, link.target));
+    }
+    console.log(d3nodes);
+    console.log(d3links);
+
+    // === Create d3 graph
     var svg = d3.select("svg"),
         width = +svg.attr("width"),
         height = +svg.attr("height");
@@ -20,9 +42,6 @@
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
 
-    let responseString = await response.json();
-    let responseJSON = JSON.parse(responseString);
-
     var g = svg.append("g")
         .attr("class", "everything");
 
@@ -30,14 +49,14 @@
     var link = g.append("g")
         .attr("class", "links")
         .selectAll("line")
-        .data(responseJSON.links)
+        .data(d3links)
         .enter().append("line");
         
     // Append text labels to each link
     var linkLabel = g.append("g")
         .attr("class", "link-labels")
         .selectAll("text")
-        .data(responseJSON.links)
+        .data(d3links)
         .enter().append("text")
         .attr("text-anchor", "middle") // Ensure labels are centered along the link
         .attr("font-size", "10px")
@@ -46,7 +65,7 @@
     var node = g.append("g")
         .attr("class", "node")
         .selectAll(".nodes")
-        .data(responseJSON.nodes)
+        .data(d3nodes)
         .enter().append("g")  // Append a 'g' element for each node
         .call(d3.drag()
             .on("start", dragstarted)
@@ -69,19 +88,13 @@
         .attr("x", 0)  // Center text horizontally on the circle's center
         .attr("y", ".31em")  // Center text vertically relative to circle
         .attr("text-anchor", "middle")  // Align text around its middle point
-        .text(d => d.name)  // Set the text to be the node's name
+        .text(d => d.getLabel())  // Set the text to be the node's name
         .style("font-size", "12px")
         .style("font-family", "Arial, sans-serif");
     
     // To add hover over display of node details
     node.append("title")
-        .text(d => {
-            if (d.type === "topic") {
-                return `Name: ${d.name}\nSummary: ${d.summary}`;
-            } else if (d.type === "paper") {
-                return `Author: ${d.author}\nName: ${d.name}\nTitle: ${d.title}\nSummary: ${d.summary}`;
-            }
-        });
+        .text(d => d.getDetails());
     
     
     // -- replaced by @gl changes
@@ -134,12 +147,12 @@
 
 
     simulation
-        .nodes(responseJSON.nodes)
+        .nodes(d3nodes)
         .on("tick", ticked);
 
     simulation
         .force("link")
-        .links(responseJSON.links);
+        .links(d3links);
 
 
     var zoom_handler = d3.zoom()
