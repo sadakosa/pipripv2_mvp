@@ -55,8 +55,9 @@ export class D3PaperNode extends D3Node {
 export class D3Link {
     source;
     target;
-    constructor(source, target) {
+    constructor(source, target, relationship_type) {
         this.source = source;
         this.target = target;
+        this.relationship_type = relationship_type;
     }
 }

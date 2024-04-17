@@ -25,7 +25,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     }
     let d3links = [];
     for (link of responseJSON.links) {
-        d3links.push(new D3Link(link.source, link.target));
+        d3links.push(new D3Link(link.source, link.target, link.relationship_type));
     }
     console.log(d3nodes);
     console.log(d3links);
