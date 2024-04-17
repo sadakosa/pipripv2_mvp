@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Iterator
-from memgraph.database.models import Node, Relationship
+from backend.memgraph.database.models import Node, Relationship
 import mgclient
 
 

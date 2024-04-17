@@ -1,6 +1,5 @@
 from flask import Flask, render_template, jsonify, make_response
-from memgraph.database import Memgraph
-from memgraph import db_operations
+from backend.memgraph import Memgraph, db_operations
 
 app = Flask(__name__)
 
@@ -10,7 +9,7 @@ app = Flask(__name__)
 def index():
     db = Memgraph()
     db_operations.clear(db)
-    db_operations.populate_database(db, "resources/piprip_data.txt")
+    db_operations.populate_database(db, "backend/resources/piprip_data.txt")
     return render_template('index.html')
 
 @app.route('/query')

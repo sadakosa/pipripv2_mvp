@@ -26,7 +26,7 @@ def search_papers_by_arxiv_id(paper_ids):
     return results
 
 
-def download_from_arxiv_response(arxiv_response, save_directory="../../papers_cache"):
+def download_from_arxiv_response(arxiv_response, save_directory="papers_cache"):
     if not os.path.exists(save_directory):
         os.makedirs(save_directory)
 
