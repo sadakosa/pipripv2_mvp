@@ -59,7 +59,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .enter().append("text")
         .attr("text-anchor", "middle") // Ensure labels are centered along the link
         .attr("font-size", "10px")
-        .text(d => d.relationship_type || ""); 
+        .text(d => d.getLabel()); 
     
     var node = g.append("g")
         .attr("class", "node")
