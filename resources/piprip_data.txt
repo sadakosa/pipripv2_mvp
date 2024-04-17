@@ -1,0 +1,11 @@
+CREATE (n:Topic { id:0, name: 'topic_one', summary: 'This is the summary of this topic. Really a very good summary'});
+CREATE (n:Topic { id:1, name: 'topic_two', summary: 'This is the summary of this topic. Really a very good summary'});
+CREATE (n:Topic { id:2, name: 'topic_three', summary: 'This is the summary of this topic. Really a very good summary'});
+
+CREATE (n:Paper { id:0, name: 'paper_one', author: "author", title: "title", summary: 'This is the summary of this paper. Really a very good summary'});
+CREATE (n:Paper { id:1, name: 'paper_two', author: "author", title: "title", summary: 'This is the summary of this paper. Really a very good summary'});                                              
+
+MATCH (a:Topic),(b:Topic) WHERE a.id = 1 AND b.id = 0 CREATE (a)-[r:SUBSET]->(b);
+MATCH (a:Topic),(b:Topic) WHERE a.id = 2 AND b.id = 0 CREATE (a)-[r:SUBSET]->(b);
+MATCH (a:Paper),(b:Topic) WHERE a.id = 0 AND b.id = 2 CREATE (a)-[r:INTRODUCES]->(b);
+MATCH (a:Paper),(b:Topic) WHERE a.id = 1 AND b.id = 2 CREATE (a)-[r:DISCUSSES]->(b);
