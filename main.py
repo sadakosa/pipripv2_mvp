@@ -13,8 +13,9 @@ def main():
     #     paper.populateReferencesUsingSS()
     #     papers.append(paper)
     #     paper.save_as_json()
-    for path in ["papers_cache/5278a8eb2ba2429d4029745caf4e661080073c81.json"]#, "papers_cache/b9750286ba2198a406137e0dfee2d545f0d78c13.json"]:
+    for path in ["papers_cache/5278a8eb2ba2429d4029745caf4e661080073c81.json"]:#, "papers_cache/b9750286ba2198a406137e0dfee2d545f0d78c13.json"]:
         paper = Paper.from_json(path)
+        print(paper)
         paper.writeCypherQueries()
 
 if __name__ == "__main__":

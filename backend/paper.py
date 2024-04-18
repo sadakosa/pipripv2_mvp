@@ -3,6 +3,7 @@ import os
 
 from backend.api_utils.arxiv_utils import search_papers_by_arxiv_id
 from backend.api_utils.semantic_scholar_utils import get_references, get_citations
+from backend.memgraph.db_utils import cleanse
 from backend.pdf_parsers import extract_references_from_pdf, find_arxiv_ids_in_text
 
 
@@ -41,6 +42,24 @@ class Paper:
 
         return paper_obj
 
+    @classmethod
+    def from_dictionary(cls, d):
+        paper_obj = cls.__new__(cls)
+        super(Paper, paper_obj).__init__()
+        paper_obj.arxiv_id = d.get("arxiv_id")
+        paper_obj.paper_id = d.get("paper_id")
+        paper_obj.url = d.get("url")
+        paper_obj.title = d.get("title")
+        paper_obj.abstract = d.get("abstract")
+        paper_obj.authors = d.get("authors")
+        paper_obj.publication_date = d.get("publication_date")
+        paper_obj.last_updated = d.get("last_updated")
+        paper_obj.references = [Paper.from_dictionary(x) for x in d.get("references")]
+        paper_obj.citations = [Paper.from_dictionary(x) for x in d.get("citations")]
+        paper_obj.citation_count = d.get("citation_count")
+
+        return paper_obj
+
     # Alternative constructor to instantiate the Paper using a json, for avoiding repeated API calls
     # Usage: paper = Paper.from_json("papers_cache/paper_id.json")
     @classmethod
@@ -58,8 +77,8 @@ class Paper:
         paper_obj.authors = paper_metadata.get("authors")
         paper_obj.publication_date = paper_metadata.get("publication_date")
         paper_obj.last_updated = paper_metadata.get("last_updated")
-        paper_obj.references = paper_metadata.get("references")
-        paper_obj.citations = paper_metadata.get("citations")
+        paper_obj.references = [Paper.from_dictionary(d) for d in paper_metadata.get("references")]  # Convert dicts to Papers
+        paper_obj.citations = [Paper.from_dictionary(d) for d in paper_metadata.get("citations")]
         paper_obj.citation_count = paper_metadata.get("citation_count")
 
         return paper_obj
@@ -121,10 +140,10 @@ class Paper:
     def writeCypherQueries(self):
         # self.references = [Paper.from_json("papers_cache/2404.00459v1.json")]
         f = open("backend/resources/dev_data.txt", "w+")
-        main_paper_query = f"CREATE (n:Node {{ id: '{self.paper_id}', title: '{self.title}', authors: {self.authors}, publication_date: '{self.publication_date}'}});\n"
+        main_paper_query = f"CREATE (n:Node {{ id: '{self.paper_id}', title: '{cleanse(self.title)}', name: '{cleanse(self.title)}', author: {[cleanse(a) for a in self.authors]}, summary: '{cleanse(self.abstract)}', publication_date: '{self.publication_date}'}});\n"
         f.write(main_paper_query)
 
         for r in self.references:
-            f.write(f"CREATE (n:Node {{ id: '{r.paper_id}', title: '{r.title}', authors: {r.authors}, publication_date: '{r.publication_date}'}});\n")
+            f.write(f"CREATE (n:Node {{ id: '{r.paper_id}', title: '{cleanse(r.title)}', name: '{cleanse(r.title)}', author: {[cleanse(a) for a in r.authors]}, summary: '{cleanse(r.abstract)}', publication_date: '{r.publication_date}'}});\n")
             f.write(f"MATCH (n1:Node {{id: '{r.paper_id}'}}), (n2:Node {{id: '{self.paper_id}'}}) CREATE (n1)-[:is_cited_by]->(n2);\n")  # edge
         f.close()
