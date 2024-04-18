@@ -136,7 +136,6 @@ class Paper:
 
     # Dev only: Writes out DB queries to convert the paper and references to nodes
     # Citation edges are generated for the paper node and its reference nodes
-    # TODO: handle special characters like ' from strings as they result in invalid queries
     def writeCypherQueries(self):
         # self.references = [Paper.from_json("papers_cache/2404.00459v1.json")]
         f = open("backend/resources/dev_data.txt", "w+")
