@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, make_response
-from backend.memgraph import Memgraph, db_operations
+from backend.memgraph.database.memgraph import Memgraph
+from backend.memgraph import db_operations
 
 app = Flask(__name__)
 
