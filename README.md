@@ -33,3 +33,10 @@ To close container, type: (Stops all running containers at once)
 ```
 docker stop $(docker ps -aq)
 ```
+
+## Gemini Client
+- Set up file called <api_key.yaml> in 'gemini/config/'
+- Add in "GEMINI_API_KEY: <your api key>"
+- python -m venv env (if it does not run, open powershell as admin and do it in the project's root folder)
+- .\env\Scripts\activate
+- pip install -q -U google-generativeai
