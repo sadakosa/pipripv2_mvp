@@ -2,3 +2,4 @@ requests==2.26.0
 bs4==0.0.2
 arxiv==2.1.0
 pdfplumber
+vertexai

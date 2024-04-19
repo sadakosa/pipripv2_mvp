@@ -16,6 +16,11 @@ To setup local environment:
 - pip install -q -U google-generativeai
 - deactivate << to exit and enter another environment (e.g., if I have multiple python projects)
 
+To connect to Gemini:
+- Install Google Cloud CLI: https://cloud.google.com/sdk/docs/install
+- Set up Application Default Credentials (ADC): https://cloud.google.com/docs/authentication/provide-credentials-adc
+- gcloud auth application-default login
+
 ## Potential libraries to use
 - https://github.com/kandiraju/arxiv_data_extraction
 - https://github.com/lukasschwab/arxiv.py
