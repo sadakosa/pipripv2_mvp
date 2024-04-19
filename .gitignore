@@ -54,4 +54,4 @@ coverage.xml
 docs/_build/
 
 # API Key
-gemini/config/api_key.py
+gemini/config/api_key.yaml
