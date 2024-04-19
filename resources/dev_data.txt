@@ -1,3 +1,0 @@
-CREATE (n:Node { id: '2304.03442v2', title: 'Generative Agents: Interactive Simulacra of Human Behavior', authors: ['Joon Sung Park', "Joseph C. O'Brien", 'Carrie J. Cai', 'Meredith Ringel Morris', 'Percy Liang', 'Michael S. Bernstein'], publication_date: '2023-04-07 01:55:19+00:00'});
-CREATE (n:Node { id: '2404.00459v1', title: 'NumeroLogic: Number Encoding for Enhanced LLMs Numerical Reasoning', authors: ['Eli Schwartz', 'Leshem Choshen', 'Joseph Shtok', 'Sivan Doveh', 'Leonid Karlinsky', 'Assaf Arbelle'], publication_date: '2024-03-30 19:46:59+00:00'});
-MATCH (n1:Node {id: '2404.00459v1'}), (n2:Node {id: '2304.03442v2'}) CREATE (n1)-[:is_cited_by]->(n2);

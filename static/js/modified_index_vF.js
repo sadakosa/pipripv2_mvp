@@ -36,7 +36,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         height = +svg.attr("height");
 
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(150)) // Increase the distance value to spread out the nodes
+        .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(600)) // Increase the distance value to spread out the nodes
         .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes

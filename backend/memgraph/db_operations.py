@@ -13,6 +13,7 @@ def populate_database(db, path):
     file.close()
     for line in lines:
         if len(line.strip()) != 0 and line[0] != '/':
+            # print(line)
             db.execute_query(line)
 
 # Execute Cypher query to link papers which share at least one common author
