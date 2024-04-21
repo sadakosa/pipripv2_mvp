@@ -10,10 +10,6 @@ current_dir = Path(__file__).parent
 parent_dir = current_dir.parent
 sys.path.append(str(parent_dir))
 
-# Import module
-from global_methods import read_txt, load_yaml_config
-from logs.logger import Logger
-
 # Remember to remove the parent directory from sys.path when done to avoid potential conflicts
 sys.path.remove(str(parent_dir))
 

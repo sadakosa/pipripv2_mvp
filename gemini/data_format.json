@@ -1,15 +1,8 @@
 
 {
     "topic": {
-        "id": "id",
-        "name": "name",
-        "description": "description",
-        "topic_as_target": [
-            {
-                "id": "id",
-                "label": "label"
-            }
-        ]
+        "id": "name",
+        "description": "description"
     },
     "relationship": {
         "source": "id",
@@ -17,11 +10,13 @@
         "label": "label"
     },
     "paper": {
-        "id": "id",
-        "ss_id": "ss_id",
+        "id": "id", << semantic scholar id or arxiv id
+        "arxiv_id": "arxiv_id",
+        "url": "url",
+        "citation_count": "citation_count",
         "title": "title",
         "abstract": "abstract",
-        "author": "author",
+        "authors": ["author", "author"],
         "publication_date": "venue",       
         "references": ["id", "id"] 
     }
