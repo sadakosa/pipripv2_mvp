@@ -29,12 +29,25 @@ def get_nodes(db):
     node_objects = []
     for topic in topics:
         n = topic['n']
-        data = {"id": n.properties['id'],"description": n.properties['description']}
+        data = {
+            "id": n.properties['id'],
+            "description": n.properties['description']
+            }
         node_objects.append(data)
 
     for paper in papers:
         n = paper['n']
-        data = {"id": n.properties['id'], "name": n.properties['name'], "author": n.properties['author'], "title": n.properties['title'], "summary": n.properties['summary']}
+        data = {
+            "id": n.properties['id'], 
+            "arxiv_id": n.properties['arxiv_id'], 
+            "url": n.properties['url'], 
+            "citation_count": n.properties['citation_count'], 
+            "title": n.properties['title'], 
+            "abstract": n.properties['abstract'], 
+            "authors": n.properties['authors'], 
+            "publication_date": n.properties['publication_date'], 
+            "references": n.properties['references']
+            }
         node_objects.append(data)
 
     return json.dumps(node_objects)
@@ -46,9 +59,10 @@ def get_topics(db):
     node_objects = []
     for topic in topics:
         n = topic['n']
-        data = {"id": n.properties['id'],"description": n.properties['description']}
-        node_objects.append(data)
-
+        data = {
+            "id": n.properties['id'],
+            "description": n.properties['description']
+            }
     return json.dumps(node_objects)
 
 def get_relationships(db):
@@ -57,11 +71,11 @@ def get_relationships(db):
 
     relationship_objects = []
     for relationship in relationships:
-        n1 = relationship['n1']
-        n2 = relationship['n2']
+        source = relationship['source']
+        target = relationship['target']
 
-        data = {"nodeN": n1.properties['name'],
-                "nodeM": n2.properties['name']}
+        data = {"source": source.properties['name'],
+                "target": target.properties['name']}
         relationship_objects.append(data)
 
     return json.dumps(relationship_objects)
@@ -70,15 +84,30 @@ def get_relationships(db):
 def paper_or_topic(node):
     if 'author' in node.properties:
         # data = {"type": "paper", "id": node.properties['id'], "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
-        data = {"type": "paper", "id": node.id, "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
+        data = {
+            "type": "paper", 
+            "id": node.id, 
+            "arxiv_id": node.properties['arxiv_id'],
+            "url": node.properties['url'],
+            "citation_count": node.properties['citation_count'],
+            "title": node.properties['title'],
+            "abstract": node.properties['abstract'],
+            "authors": json.dump(node.properties['authors']),
+            "publication_date": node.properties['publication_date'],
+            "references": json.dump(node.properties['references'])
+            }
         return data
     else:
         # data = {"type": "topic", "id": node.properties['id'], "name": node.properties['name'], "summary": node.properties['summary']}
-        data = {"type": "topic", "id": node.id, "name": node.properties['name'], "summary": node.properties['summary']}
+        data = {
+            "type": "topic", 
+            "id": node.id, # name of topic
+            "description": node.properties['description']
+            }
         return data
 
 def get_graph(db):
-    command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS relationship_type, r, n2, labels(n2) AS n2_labels;"
+    command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
     relationships = db.execute_and_fetch(command)
     print("in get_graph")
 
@@ -88,7 +117,11 @@ def get_graph(db):
     for relationship in relationships:
         r = relationship['r']
         # print(r)
-        data = {"source": r.nodes[0], "target": r.nodes[1], "relationship_type": relationship['relationship_type']}
+        data = {
+            "source": r.nodes[0], 
+            "target": r.nodes[1], 
+            "label": relationship['label']
+            }
         link_objects.append(data)
 
         n1 = relationship['n1']
@@ -102,21 +135,6 @@ def get_graph(db):
             data = paper_or_topic(n2)
             node_objects.append(data)
             added_nodes.append(n2.id)
-
-        # old code to identify nodes by given_id and label (but changed to use neo4j db id only as shown above)
-        # n1 = relationship['n1']
-        # n1_label = relationship['n1_labels'][0]
-        # if not (str(n1.id) + n1_label in added_nodes):
-        #     data = paper_or_topic(n1, n1_label)
-        #     node_objects.append(data)
-        #     added_nodes.append(str(n1.id) + n1_label)
-
-        # n2 = relationship['n2']
-        # n2_label = relationship['n2_labels'][0]
-        # if not (str(n2.id) + n2_label in added_nodes):
-        #     data = paper_or_topic(n2, n2_label)
-        #     node_objects.append(data)
-        #     added_nodes.append(str(n2.id) + n2_label)
 
     data = {"links": link_objects, "nodes": node_objects}
 

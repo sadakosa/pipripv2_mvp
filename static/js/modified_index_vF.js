@@ -18,14 +18,24 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     let d3nodes = [];
     for (node of responseJSON.nodes) {
         if (node.type === "topic") {
-            d3nodes.push(new D3TopicNode(node.id, node.name, node.summary));
+            d3nodes.push(new D3TopicNode(node.id, node.description));
         } else {
-            d3nodes.push(new D3PaperNode(node.id, node.name, node.author, node.title, node.summary));
+            d3nodes.push(new D3PaperNode(
+                node.id, 
+                node.arxiv_id, 
+                node.url, 
+                node.citation_count, 
+                node.title, 
+                node.abstract, 
+                node.authors, 
+                node.publication_date, 
+                node.references
+            ));
         }
     }
     let d3links = [];
     for (link of responseJSON.links) {
-        d3links.push(new D3Link(link.source, link.target, link.relationship_type));
+        d3links.push(new D3Link(link.source, link.target, link.label));
     }
     console.log(d3nodes);
     console.log(d3links);
