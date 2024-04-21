@@ -8,25 +8,34 @@ from backend.memgraph.database.memgraph import Memgraph
 
 # take in a json string of the form in data_format.json file and produce a cypher query to insert the data into the graph with a uuid
 
-def topic_cypher_query(topic):
-    f = open("../backend/resources/gemini_data.txt", "w+")
+def topic_cypher_query(topic, f):
     topic_query = f"CREATE (n:Topic {{ id: '{topic.name}', description: '{topic.description}'}});\n"
     f.write(topic_query)
-    f.close()
 
-def relationship_cypher_query(relationship):
-    f = open("../backend/resources/gemini_data.txt", "w+")
+def relationship_cypher_query(relationship, f):
     f.write(f"MATCH (n1:Source {{id: '{relationship.source}'}}), (n2:Target {{id: '{relationship.target}'}}) CREATE (n1)-[:'{relationship.label}']->(n2);\n")  # edge
-    f.close()
 
-def paper_cypher_query(paper):
-    f = open("../backend/resources/gemini_data.txt", "w+")
+def paper_cypher_query(paper, f):
     paper_query = f"CREATE (n:Paper {{ id: '{paper.name}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{paper.title}', abstract: '{paper.abstract}', authors: '{paper.authors}', publication_date: '{paper.publication_date}', references: '{paper.references}'}});\n"
     f.write(paper_query)  # edge
+
+
+def list_to_cypher_query(data, data_type):
+    f = open("../backend/resources/gemini_data.txt", "w+")
+
+    if data_type == "topic":
+        for topic in data:
+            topic_cypher_query(topic, f)
+    elif data_type == "relationship":
+        for relationship in data:
+            relationship_cypher_query(relationship, f)
+    elif data_type == "paper":
+        for paper in data:
+            paper_cypher_query(paper, f)
+
     f.close()
 
 
-# TODO: File open and close issue
 
 # ======================== CHECKS FOR MAIN FUNCTION ========================
 
