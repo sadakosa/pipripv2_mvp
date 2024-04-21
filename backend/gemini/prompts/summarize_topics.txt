@@ -1,0 +1,16 @@
+I have provided a list of topics from academic papers. You should group the topics into broader topics, based on similarities between the topics. The total number of broader topics should be <= the number of input topics. You may choose not to output a new broad topic if the input topic does not relate to any other topic. Refer to the following example for the output format (a json array of topic objects). The output id field refers to the name of the newly generated topic, and the topic_ids field refers to the topics used to generate this new topic. Topic names must be nouns between 1-3 words. Note: you should not output anything other than the json array. Failure to comply will result in termination.
+
+Input:
+Large Language Models, Quantum Entanglement, Electric Vehicle Manufacturing, Human Behavior Simulation, Generative Adversarial Networks, Albert Einstein
+
+Output:
+[
+  {
+    "id": "Deep Learning",
+    "topic_ids": ["Large Language Models", "Generative Adversarial Networks"]
+  },
+  {
+    "id": "Physics",
+    "paper_ids": ["Quantum Entanglement", "Albert Einstein"]
+  }
+]

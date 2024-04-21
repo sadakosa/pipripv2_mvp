@@ -2,25 +2,17 @@
 
 #create access to the Google Gemini AI
 import google.generativeai as genai
-import sys
-from pathlib import Path
 
-# Add the parent directory to sys.path
-current_dir = Path(__file__).parent
-parent_dir = current_dir.parent
-sys.path.append(str(parent_dir))
-
-# Remember to remove the parent directory from sys.path when done to avoid potential conflicts
-sys.path.remove(str(parent_dir))
+from backend.global_methods import load_yaml_config, read_txt
 
 class GeminiClient:
     def __init__(self):
         # load the prompts
-        starter_path = current_dir/ 'prompts/starter.txt'
-        self.starter_sys_prompt = read_txt(starter_path)
+        self.prompts_path = 'backend/gemini/prompts'
+        self.starter_sys_prompt = read_txt(f"{self.prompts_path}/starter.txt")
 
         # load the api key
-        config = load_yaml_config(current_dir/ 'config/api_key.yaml')
+        config = load_yaml_config('backend/gemini/config/api_key.yaml')
         api_key = config['GEMINI_API_KEY']
         genai.configure(api_key=api_key)
         self.client = genai.GenerativeModel('gemini-pro')
@@ -36,4 +28,16 @@ class GeminiClient:
     def send_single_prompt(self, prompt):
         response = self.client.generate_content(prompt)
         print(response.text)
+        return response
+
+    def generate_topics_from_abstracts(self):
+        generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
+        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")
+        response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
+        return response
+
+    def summarize_topics(self):
+        summarize_topics_prompt = read_txt(f"{self.prompts_path}/summarize_topics.txt")
+        test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"
+        response = self.send_single_prompt([test_topics, summarize_topics_prompt])
         return response

@@ -10,7 +10,7 @@
         "label": "label"
     },
     "paper": {
-        "id": "id", << semantic scholar id or arxiv id
+        "id": "id",
         "arxiv_id": "arxiv_id",
         "url": "url",
         "citation_count": "citation_count",
