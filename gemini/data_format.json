@@ -1,0 +1,28 @@
+
+{
+    "topic": {
+        "id": "id",
+        "name": "name",
+        "description": "description",
+        "topic_as_target": [
+            {
+                "id": "id",
+                "label": "label"
+            }
+        ]
+    },
+    "relationship": {
+        "source": "id",
+        "target": "id",
+        "label": "label"
+    },
+    "paper": {
+        "id": "id",
+        "ss_id": "ss_id",
+        "title": "title",
+        "abstract": "abstract",
+        "author": "author",
+        "publication_date": "venue",       
+        "references": ["id", "id"] 
+    }
+}
