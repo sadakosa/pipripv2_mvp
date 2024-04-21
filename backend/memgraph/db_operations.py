@@ -29,7 +29,7 @@ def get_nodes(db):
     node_objects = []
     for topic in topics:
         n = topic['n']
-        data = {"id": n.properties['id'], "name": n.properties['name'], "summary": n.properties['summary']}
+        data = {"id": n.properties['id'],"description": n.properties['description']}
         node_objects.append(data)
 
     for paper in papers:
@@ -39,6 +39,17 @@ def get_nodes(db):
 
     return json.dumps(node_objects)
 
+def get_topics(db):
+    command = "MATCH (n:Topic) RETURN n;"
+    topics = db.execute_and_fetch(command)
+
+    node_objects = []
+    for topic in topics:
+        n = topic['n']
+        data = {"id": n.properties['id'],"description": n.properties['description']}
+        node_objects.append(data)
+
+    return json.dumps(node_objects)
 
 def get_relationships(db):
     command = "MATCH (n1)-[r]-(n2) RETURN n1, r, n2;"

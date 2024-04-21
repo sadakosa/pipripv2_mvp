@@ -1,4 +1,10 @@
 import json
+from backend.memgraph.db_operations import get_topics
+from backend.memgraph.database.memgraph import Memgraph
+
+
+
+# ======================== WRITING CYPHER QUERIES ========================
 
 # take in a json string of the form in data_format.json file and produce a cypher query to insert the data into the graph with a uuid
 
@@ -20,6 +26,7 @@ def relationship_cypher_query(relationship):
     f.write(f"MATCH (n1:Source {{id: '{relationship_json.source}'}}), (n2:Target {{id: '{relationship_json.target}'}}) CREATE (n1)-[:'{relationship_json.label}']->(n2);\n")  # edge
     f.close()
 
+# ======================== CHECKS FOR MAIN FUNCTION ========================
 
 # check if the topic name is unique
 # check if the format is in json
@@ -32,6 +39,16 @@ def is_json(myjson):
         return False
     return True
 
+def is_repeated_topic_name(topic_name):
+    db = Memgraph()
+    topics = json.loads(get_topics(db))
+
+    if any(topic['name'] == topic_name for topic in topics):
+        print("The topic name is not unique")
+        return True
+    return False
+
+# ======================== MAIN FUNCTION ========================
 
 def gemini_response_to_file(gemini_response):
     # check if the format is in json
@@ -42,14 +59,16 @@ def gemini_response_to_file(gemini_response):
     # assuming gemini_response is a json string, with an array of objects (either topics or relationships)
     response_json = json.loads(gemini_response)
 
-    for object in response_json:
-        if "description" in object:
-            # check if the topic name is unique
+    for topic in response_json.topics:
+        # check if the topic name is unique
+        if is_repeated_topic_name(topic.name):
+            return
+        
+        # write to db
+        topic_cypher_query(topic)
 
-            # write to db
-            topic_cypher_query(object)
-        else:
-            relationship_cypher_query(object)
+    for relationship in response_json.relationships:
+        relationship_cypher_query(relationship)
     
 
     
