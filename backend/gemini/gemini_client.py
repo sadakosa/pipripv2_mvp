@@ -34,7 +34,7 @@ class GeminiClient:
 
     def generate_topics_from_abstracts(self):
         generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
-        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")
+        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
         response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
         topics = []
         edges = []  # TODO: populate edges
@@ -49,7 +49,7 @@ class GeminiClient:
 
     def summarize_topics(self):
         summarize_topics_prompt = read_txt(f"{self.prompts_path}/summarize_topics.txt")
-        test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"
+        test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"  # TODO: replace with actual DB query
         response = self.send_single_prompt([test_topics, summarize_topics_prompt])
         topics = []
         edges = []  # TODO: populate edges
