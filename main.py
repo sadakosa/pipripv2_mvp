@@ -18,7 +18,7 @@ def main():
     #     print(paper)
     #     paper.writeCypherQueries()
     gem = GeminiClient()
-    print(gem.summarize_topics())
+    print(gem.generate_topics_from_abstracts())
 
     '''
     Gemini output
