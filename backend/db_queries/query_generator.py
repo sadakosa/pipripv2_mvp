@@ -16,7 +16,7 @@ def relationship_cypher_query(relationship, f):
     f.write(f"MATCH (n1:Source {{id: '{relationship.source}'}}), (n2:Target {{id: '{relationship.target}'}}) CREATE (n1)-[:'{relationship.label}']->(n2);\n")  # edge
 
 def paper_cypher_query(paper, f):
-    paper_query = f"CREATE (n:Paper {{ id: '{paper.name}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{paper.title}', abstract: '{paper.abstract}', authors: '{paper.authors}', publication_date: '{paper.publication_date}', references: '{paper.references}'}});\n"
+    paper_query = f"CREATE (n:Paper {{ id: '{paper.title}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{paper.title}', abstract: '{paper.abstract}', authors: '{paper.authors}', publication_date: '{paper.publication_date}', references: '{paper.references}'}});\n"
     f.write(paper_query)  # edge
 
 
