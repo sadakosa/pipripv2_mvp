@@ -3,6 +3,7 @@ from backend.memgraph.db_operations import get_topics
 # from backend.memgraph.database.memgraph import Memgraph
 from backend.memgraph.db_utils import cleanse
 import os
+from backend.edge import Edge
 
 class QueryGenerator:
     def __init__(self):
@@ -28,10 +29,16 @@ class QueryGenerator:
         f.write(paper_query)
         
         for r in paper.references:
-            self.paper_cypher_query(r, f)
-            relationship_dict = {"source": cleanse(paper.title), "target": cleanse(r.title), "label": "is_cited_by"}
-            print("relationship_dict: ", relationship_dict.source)
-            self.relationship_cypher_query(relationship_dict, f)
+            self.generate_paper_query(r, f)
+
+            relationship_dict = {
+                "source": cleanse(r.title),
+                "target": cleanse(paper.title),
+                "label": "is_cited_by"
+            }
+
+            relationship = Edge(relationship_dict)
+            self.generate_relationship_query(relationship, f)
 
 
     # take in a list of topics or relationships and produce a cypher query to insert the data into the graph with a uuid
@@ -40,13 +47,13 @@ class QueryGenerator:
 
         if data_type == "topic":
             for topic in data:
-                self.topic_cypher_query(topic, f)
+                self.generate_topic_query(topic, f)
         elif data_type == "relationship":
             for relationship in data:
-                self.relationship_cypher_query(relationship, f)
+                self.generate_relationship_query(relationship, f)
         elif data_type == "paper":
             for paper in data:
-                self.paper_cypher_query(paper, f)
+                self.generate_paper_query(paper, f)
 
         f.close()
 
