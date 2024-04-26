@@ -5,6 +5,7 @@ import json
 
 from backend.global_methods import load_yaml_config, read_txt
 from backend.topic import Topic
+from backend.edge import Edge
 
 
 class GeminiClient:
@@ -32,6 +33,7 @@ class GeminiClient:
         print(response.text)
         return response
 
+    # Generate L2 topics 
     def generate_topics_from_abstracts(self):
         generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
         test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
@@ -47,6 +49,7 @@ class GeminiClient:
             print("Error parsing JSON:", e)
         return topics
 
+    # Summarise L2 topics into L1 topics
     def summarize_topics(self):
         summarize_topics_prompt = read_txt(f"{self.prompts_path}/summarize_topics.txt")
         test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"  # TODO: replace with actual DB query
@@ -61,3 +64,22 @@ class GeminiClient:
         except json.JSONDecodeError as e:
             print("Error parsing JSON:", e)
         return topics
+
+    # For testing edge generation, actual edge generation is combined into 
+    def test_generate_edges(self):
+        generate_edges_prompt = read_txt(f"{self.prompts_path}/generate_topic_edges.txt")
+        test_topics = read_txt(f"{self.prompts_path}/sample_topics.txt")
+        # full_prompt = generate_edges_prompt.format(input=test_topics)
+        # full_prompt = generate_edges_prompt
+        full_prompt = generate_edges_prompt + test_topics
+        print(full_prompt)
+        response = self.send_single_prompt(full_prompt)
+        edges = []
+        try:
+            json_array = json.loads(response.text)
+            for d in json_array:
+                edge = Edge(d)
+                edges.append(edge)
+        except json.JSONDecodeError as e:
+            print("Error parsing JSON:", e)
+        return edges
