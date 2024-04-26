@@ -6,6 +6,7 @@ import json
 from backend.global_methods import load_yaml_config, read_txt
 from backend.topic import Topic
 
+from backend.db_queries.query_extractor import QueryExtractor
 
 class GeminiClient:
     def __init__(self):
@@ -34,8 +35,12 @@ class GeminiClient:
 
     def generate_topics_from_abstracts(self):
         generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
-        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
-        response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
+
+        query_extractor = QueryExtractor()
+        paper_abstracts = query_extractor.get_simplified_paper_abstracts()
+        # test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
+
+        response = self.send_single_prompt([paper_abstracts, generate_topics_prompt])
         topics = []
         edges = []  # TODO: populate edges
         try:
