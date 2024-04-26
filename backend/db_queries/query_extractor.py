@@ -34,6 +34,6 @@ class QueryExtractor:
         ]
         return transformed_list
     
-    def get_simplified_papers(self):
+    def get_simplified_paper_abstracts(self):
         papers = self.extract_papers_from_queries()
         return self.simplify_papers_response(papers)
