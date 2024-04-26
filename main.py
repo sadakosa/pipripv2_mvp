@@ -19,7 +19,7 @@ def main():
     #     paper.writeCypherQueries()
     gem = GeminiClient()
     # print(gem.generate_topics_from_abstracts())
-    gem.test_generate_edges()
+    gem.generate_l2_topic_graph()
 
     '''
     Gemini output

@@ -32,22 +32,27 @@ class GeminiClient:
         response = self.client.generate_content(prompt)
         print(response.text)
         return response
-
-    # Generate L2 topics 
-    def generate_topics_from_abstracts(self):
-        generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
+    
+    # Generates the L2 topics from paper abstract, and edges between the topics
+    def generate_l2_topic_graph(self):
+        prompt = read_txt(f"{self.prompts_path}/generate_l2_topic_graph.txt")
         test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
-        response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
+        full_prompt = prompt + test_abstracts
+
+        response = self.send_single_prompt(full_prompt)
         topics = []
-        edges = []  # TODO: populate edges
+        edges = []
         try:
-            json_array = json.loads(response.text)
-            for d in json_array:
+            json_result = json.loads(response.text)
+            for d in json_result["topics"]:
                 topic = Topic(d)
                 topics.append(topic)
+            for d in json_result["edges"]:
+                edge = Edge(d)
+                edges.append(edge)
         except json.JSONDecodeError as e:
             print("Error parsing JSON:", e)
-        return topics
+        return (topics, edges)
 
     # Summarise L2 topics into L1 topics
     def summarize_topics(self):
@@ -65,13 +70,31 @@ class GeminiClient:
             print("Error parsing JSON:", e)
         return topics
 
-    # For testing edge generation, actual edge generation is combined into 
+    # === testing ===
+    # For testing L2 topics generation 
+    def test_generate_topics_from_abstracts(self):
+        generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
+        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
+        response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
+        topics = []
+        edges = []  # TODO: populate edges
+        try:
+            json_array = json.loads(response.text)
+            for d in json_array:
+                topic = Topic(d)
+                topics.append(topic)
+        except json.JSONDecodeError as e:
+            print("Error parsing JSON:", e)
+        return topics
+
+    # For testing edge generation
+    # actual edge generation is combined into generate_l2_topic_graph
     def test_generate_edges(self):
-        generate_edges_prompt = read_txt(f"{self.prompts_path}/generate_topic_edges.txt")
+        prompt = read_txt(f"{self.prompts_path}/generate_topic_edges.txt")
         test_topics = read_txt(f"{self.prompts_path}/sample_topics.txt")
         # full_prompt = generate_edges_prompt.format(input=test_topics)
         # full_prompt = generate_edges_prompt
-        full_prompt = generate_edges_prompt + test_topics
+        full_prompt = prompt + test_topics
         print(full_prompt)
         response = self.send_single_prompt(full_prompt)
         edges = []
