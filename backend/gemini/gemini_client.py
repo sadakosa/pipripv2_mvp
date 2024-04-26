@@ -1,11 +1,14 @@
 # Gemini client that connects to Google Gemini
 
 import google.generativeai as genai
+from google.generativeai.types import content_types as ct
+
 import json
 
 from backend.global_methods import load_yaml_config, read_txt
 from backend.topic import Topic
 
+from backend.db_queries.query_extractor import QueryExtractor
 
 class GeminiClient:
     def __init__(self):
@@ -33,13 +36,23 @@ class GeminiClient:
         return response
 
     def generate_topics_from_abstracts(self):
-        generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
-        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
-        response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
+        generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics_smc.txt")
+
+        query_extractor = QueryExtractor()
+        paper_abstracts = query_extractor.get_simplified_paper_abstracts()
+        # test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
+        serialized_data = json.dumps(paper_abstracts) # Serialize your data to a JSON string
+        # papers_blob = ct.to_blob(serialized_data) # Assuming the `to_blob` method can accept a string and convert it to a Blob
+
+        response_one = self.send_single_prompt([generate_topics_prompt])
+        print("response_one:", response_one.text)
+        response_two = self.send_single_prompt([serialized_data])
+        print("response_two:", response_two.text)
+
         topics = []
         edges = []  # TODO: populate edges
         try:
-            json_array = json.loads(response.text)
+            json_array = json.loads(response_two.text)
             for d in json_array:
                 topic = Topic(d)
                 topics.append(topic)

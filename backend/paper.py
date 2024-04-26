@@ -133,16 +133,3 @@ class Paper:
         for res in results:
             referenced_paper = Paper.from_arxiv(res)
             self.references.append(referenced_paper)
-
-    # Dev only: Writes out DB queries to convert the paper and references to nodes
-    # Citation edges are generated for the paper node and its reference nodes
-    def writeCypherQueries(self):
-        # self.references = [Paper.from_json("papers_cache/2404.00459v1.json")]
-        f = open("backend/resources/dev_data.txt", "w+")
-        main_paper_query = f"CREATE (n:Paper {{ id: '{self.paper_id}', title: '{cleanse(self.title)}', name: '{cleanse(self.title)}', author: {[cleanse(a) for a in self.authors]}, summary: '{cleanse(self.abstract)}', publication_date: '{self.publication_date}'}});\n"
-        f.write(main_paper_query)
-
-        for r in self.references:
-            f.write(f"CREATE (n:Paper {{ id: '{r.paper_id}', title: '{cleanse(r.title)}', name: '{cleanse(r.title)}', author: {[cleanse(a) for a in r.authors]}, summary: '{cleanse(r.abstract)}', publication_date: '{r.publication_date}'}});\n")
-            f.write(f"MATCH (n1:Paper {{id: '{r.paper_id}'}}), (n2:Paper {{id: '{self.paper_id}'}}) CREATE (n1)-[:is_cited_by]->(n2);\n")  # edge
-        f.close()
