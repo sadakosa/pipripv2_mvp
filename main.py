@@ -41,7 +41,7 @@ def main():
     # =========================================
 
     gem = GeminiClient()
-    print(gem.generate_topics_from_abstracts())
+    print("topics: ", gem.generate_topics_from_abstracts())
 
     '''
     Gemini output
