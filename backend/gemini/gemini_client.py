@@ -6,6 +6,7 @@ import json
 from backend.global_methods import load_yaml_config, read_txt
 from backend.topic import Topic
 from backend.edge import Edge
+from backend.l2graph import L2Graph
 
 
 class GeminiClient:
@@ -52,7 +53,10 @@ class GeminiClient:
                 edges.append(edge)
         except json.JSONDecodeError as e:
             print("Error parsing JSON:", e)
-        return (topics, edges)
+
+        l2graph = L2Graph(topics, edges)
+
+        return l2graph
 
     # Summarise L2 topics into L1 topics
     def summarize_topics(self):
