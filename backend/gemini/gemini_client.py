@@ -66,6 +66,8 @@ class GeminiClient:
             try:
                 json_result = json.loads(response.text)
                 for d in json_result["topics"]:
+                    if not d.get("paper_ids"):  # skip topics with no linked papers
+                        continue
                     topic = Topic(d)
                     topics.append(topic)
                     # paper-topic edges
@@ -110,8 +112,19 @@ class GeminiClient:
             try:
                 json_result = json.loads(response.text)
                 for d in json_result["topics"]:
+                    if not d.get("topic_ids"):  # skip topics with no linked topics
+                        continue
                     topic = Topic(d)
                     topics.append(topic)
+                    for topic_id in d.get("topic_ids"):
+                        edge = Edge({
+                            "source_type": "Topic",
+                            "target_type": "Topic",
+                            "source": topic_id,
+                            "target": topic.id,
+                            "label": "is_subset_of"
+                        })
+                        edges.append(edge)
                 for d in json_result["edges"]:
                     d['label'] = d.get('label').replace(" ", "_")
                     edge = Edge(d)
