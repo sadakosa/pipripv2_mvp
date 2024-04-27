@@ -8,6 +8,8 @@ from backend.topic import Topic
 from backend.edge import Edge
 from backend.l2graph import L2Graph
 
+# Constants
+NUM_RETRIES = 5
 
 class GeminiClient:
     def __init__(self):
@@ -40,21 +42,30 @@ class GeminiClient:
         test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
         full_prompt = prompt + test_abstracts
 
-        response = self.send_single_prompt(full_prompt)
         topics = []
         edges = []
-        try:
-            json_result = json.loads(response.text)
-            for d in json_result["topics"]:
-                topic = Topic(d)
-                topics.append(topic)
-            for d in json_result["edges"]:
-                edge = Edge(d)
-                edges.append(edge)
-        except json.JSONDecodeError as e:
-            print("Error parsing JSON:", e)
+        success = False
+        # Retry for NUM_RETRIES times, because sometimes the output may not be correct JSON or empty
+        for i in range(NUM_RETRIES):
+            if success:
+                break
+            # Send request to gemini
+            print("Generating L2 topic graph...")
+            response = self.send_single_prompt(full_prompt)
+            try:
+                json_result = json.loads(response.text)
+                for d in json_result["topics"]:
+                    topic = Topic(d)
+                    topics.append(topic)
+                for d in json_result["edges"]:
+                    edge = Edge(d)
+                    edges.append(edge)
 
-        l2graph = L2Graph(topics, edges)
+                l2graph = L2Graph(topics, edges)
+                success = True
+            except json.JSONDecodeError as e:
+                print("Error parsing JSON:", e)
+                continue
 
         return l2graph
 
