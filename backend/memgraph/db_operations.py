@@ -75,6 +75,7 @@ def get_relationships(db):
         relationships = db.execute_and_fetch(command)
 
         relationship_objects = []
+        print(relationships)
         for relationship in relationships:
             source = relationship.get('source', 'No Source')
             target = relationship.get('target', 'No Target')
@@ -94,7 +95,7 @@ def paper_or_topic(node):
         # data = {"type": "paper", "id": node.properties['id'], "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
         data = {
             "type": "paper",
-            "id": node.id,
+            "id": node.properties['id'],
             "arxiv_id": node.properties['arxiv_id'],
             "url": node.properties['url'],
             "citation_count": node.properties['citation_count'],
@@ -109,7 +110,7 @@ def paper_or_topic(node):
         # data = {"type": "topic", "id": node.properties['id'], "name": node.properties['name'], "summary": node.properties['summary']}
         data = {
             "type": "topic",
-            "id": node.id,  # name of topic
+            "id": node.properties['id'],  # name of topic
             "description": node.properties['description']
         }
         return data
@@ -141,10 +142,10 @@ def get_graph(db):
     #         added_nodes.append(n.id)
     for relationship in relationships:
         r = relationship['r']
-        # print(r)
+        print(relationship)
         data = {
-            "source": r.nodes[0],
-            "target": r.nodes[1],
+            "source": relationship['n1'].properties['id'],
+            "target": relationship['n2'].properties['id'],
             "label": relationship['label']
         }
         link_objects.append(data)

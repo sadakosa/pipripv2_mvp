@@ -8,54 +8,46 @@ export class D3Node {
         this.type = type;
         this.id = id;
     }
-    getLabel() { return ""; }
-    getDetails() { return ""; }
+    getLabel() { return "Unknown"; }
+    getDetails() { return "Details not found"; }
 }
 
 export class D3TopicNode extends D3Node {
-    name;
-    summary;
-    constructor(id, name, summary) {
+    constructor(id, description) {
         super("topic", id);
-        this.name = name;
-        this.summary = summary;
+        this.description = description;
     }
 
     getLabel() {
-        return this.name;
+        return this.id;
     }
 
     getDetails() {
-        return `Name: ${this.name}\nSummary: ${this.summary}`;
+        return `Topic: ${this.id}\Description: ${this.description}`;
     }
 }
 
 export class D3PaperNode extends D3Node {
-    name;
-    author;
-    title;
-    summary;
-    constructor(id, name, author, title, summary) {
+    constructor(id, title, authors, abstract) {
         super("paper", id);
-        this.name = name;
-        this.author = author;
         this.title = title;
-        this.summary = summary;
+        this.authors = authors;
+        this.abstract = abstract;
     }
 
     getLabel() {
-        return this.name;
+        return this.title;
     }
 
     getDetails() {
-        return `Author: ${this.author}\nName: ${this.name}\nTitle: ${this.title}\nSummary: ${this.summary}`;
+        return `Authors: ${this.authors}\SS ID: ${this.ss_id}\nTitle: ${this.title}\Abstract: ${this.abstract}`;
     }
 }
 
 export class D3Link {
-    source;
-    target;
-    relationship_type = "";
+//    source;
+//    target;
+//    relationship_type = "";
     constructor(source, target, relationship_type) {
         this.source = source;
         this.target = target;

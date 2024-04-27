@@ -25,7 +25,7 @@ def generate_edge_queries(edges: list[Edge]):
 def generate_paper_queries(papers: list[Paper]):
     queries = []
     for paper in papers:
-        paper_query = f"CREATE (n:Paper {{ id: '{cleanse(paper.title)}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{cleanse(paper.title)}', abstract: '{cleanse(paper.abstract)}', authors: {[cleanse(a) for a in paper.authors]}, publication_date: '{paper.publication_date}'}});\n"
+        paper_query = f"CREATE (n:Paper {{ id: '{paper.paper_id}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{cleanse(paper.title)}', abstract: '{cleanse(paper.abstract)}', authors: {[cleanse(a) for a in paper.authors]}, publication_date: '{paper.publication_date}'}});\n"
         queries.append(paper_query)
         queries += generate_paper_queries(paper.references)
     return queries

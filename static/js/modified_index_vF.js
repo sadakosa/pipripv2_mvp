@@ -14,6 +14,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     let responseString = await response.json();
     let responseJSON = JSON.parse(responseString);
+    console.log(responseJSON);
 
     let d3nodes = [];
     for (node of responseJSON.nodes) {
@@ -21,15 +22,15 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             d3nodes.push(new D3TopicNode(node.id, node.description));
         } else {
             d3nodes.push(new D3PaperNode(
-                node.id, 
-                node.arxiv_id, 
-                node.url, 
-                node.citation_count, 
-                node.title, 
-                node.abstract, 
-                node.authors, 
-                node.publication_date, 
-                node.references
+                node.id,
+//                node.arxiv_id,
+//                node.url,
+//                node.citation_count,
+                node.title,
+                node.authors,
+                node.abstract
+//                node.publication_date,
+//                node.references
             ));
         }
     }
@@ -46,7 +47,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         height = +svg.attr("height");
 
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(600)) // Increase the distance value to spread out the nodes
+        .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
         .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
@@ -83,10 +84,10 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     
     // Append circle to each node group
     node.append("circle")
-        .attr("r", d => Math.max(5, d.name.length * 2))
+        .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
-                return `darkgray`;
+                return `#FFF0F5`;
             } else if (d.type === "paper") {
                 return `gray`;
             }
