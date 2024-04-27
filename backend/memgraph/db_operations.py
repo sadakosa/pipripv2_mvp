@@ -15,7 +15,6 @@ def populate_database(db, path):
     file.close()
     for line in lines:
         if len(line.strip()) != 0 and line[0] != '/':
-            # print(line)
             db.execute_query(line)
 
 # Execute Cypher query to link papers which share at least one common author
@@ -32,23 +31,24 @@ def get_nodes(db):
     for topic in topics:
         n = topic['n']
         data = {
-            "id": n.properties['id'],
-            "description": n.properties['description']
+            "id": n.properties.get('id', 'No ID'),
+            "description": n.properties.get('description', 'No Description')
             }
         node_objects.append(data)
 
     for paper in papers:
         n = paper['n']
         data = {
-            "id": n.properties['id'], 
-            "arxiv_id": n.properties['arxiv_id'], 
-            "url": n.properties['url'], 
-            "citation_count": n.properties['citation_count'], 
-            "title": n.properties['title'], 
-            "abstract": n.properties['abstract'], 
-            "authors": n.properties['authors'], 
-            "publication_date": n.properties['publication_date'], 
-            "references": n.properties['references']
+            "type": "Paper", 
+            "id": n.id, 
+            "arxiv_id": n.properties.get('arxiv_id', 'N/A'),
+            "url": n.properties.get('url', 'N/A'),
+            "citation_count": n.properties.get('citation_count', 'N/A'),
+            "title": n.properties.get('title', 'No Title'),
+            "abstract": n.properties.get('abstract', 'No Abstract'),
+            "authors": json.dumps(n.properties.get('authors', [])),
+            "publication_date": n.properties.get('publication_date', 'No Date'),
+            "references": json.dumps(n.properties.get('references', []))
             }
         node_objects.append(data)
 
@@ -68,43 +68,49 @@ def get_topics(db):
     return json.dumps(node_objects)
 
 def get_relationships(db):
-    command = "MATCH (n1)-[r]-(n2) RETURN n1, r, n2;"
-    relationships = db.execute_and_fetch(command)
+    try:
+        command = "MATCH (n1)-[r]-(n2) RETURN n1, r, n2;"
+        relationships = db.execute_and_fetch(command)
 
-    relationship_objects = []
-    for relationship in relationships:
-        source = relationship['source']
-        target = relationship['target']
+        relationship_objects = []
+        for relationship in relationships:
+            source = relationship.get('source', 'No Source')
+            target = relationship.get('target', 'No Target')
 
-        data = {"source": source.properties['name'],
-                "target": target.properties['name']}
-        relationship_objects.append(data)
+            data = {"source": source.properties.get('name', 'no name'),
+                    "target": target.properties.get('name', 'no name')}
+            relationship_objects.append(data)
 
-    return json.dumps(relationship_objects)
+        return json.dumps(relationship_objects)
+    except Exception as e:
+        print(f"Error retrieving relationships: {str(e)}")
+        return []
 
 
 def paper_or_topic(node):
-    if 'author' in node.properties:
+    if 'authors' in node.properties:
         # data = {"type": "paper", "id": node.properties['id'], "name": node.properties['name'], "author": node.properties['author'], "title": node.properties['title'], "summary": node.properties['summary']}
         data = {
-            "type": "paper", 
+            "type": "Paper", 
             "id": node.id, 
-            "arxiv_id": node.properties['arxiv_id'],
-            "url": node.properties['url'],
-            "citation_count": node.properties['citation_count'],
-            "title": node.properties['title'],
-            "abstract": node.properties['abstract'],
-            "authors": json.dump(node.properties['authors']),
-            "publication_date": node.properties['publication_date'],
-            "references": json.dump(node.properties['references'])
+            "arxiv_id": node.properties.get('arxiv_id', 'N/A'),
+            "url": node.properties.get('url', 'N/A'),
+            "citation_count": node.properties.get('citation_count', 'N/A'),
+            "title": node.properties.get('title', 'No Title'),
+            "abstract": node.properties.get('abstract', 'No Abstract'),
+            "authors": json.dumps(node.properties.get('authors', [])),
+            "publication_date": node.properties.get('publication_date', 'No Date'),
+            "references": json.dumps(node.properties.get('references', []))
             }
         return data
     else:
         # data = {"type": "topic", "id": node.properties['id'], "name": node.properties['name'], "summary": node.properties['summary']}
+        print("Node with ID {} is considered a topic.".format(node.id))
         data = {
-            "type": "topic", 
-            "id": node.id, # name of topic
-            "description": node.properties['description']
+            "type": "Topic", 
+            # "id": node.id, # name of topic
+            "id": node.properties.get('id', 'No Topic Name'),
+            "description": node.properties.get('description', 'No description available')
             }
         return data
 
