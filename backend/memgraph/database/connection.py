@@ -55,7 +55,15 @@ class MemgraphConnection(Connection):
     def execute_query(self, query: str) -> None:
         """Executes Cypher query without returning any results."""
         cursor = self._connection.cursor()
-        cursor.execute(query)
+        
+        # cursor.execute(query)
+        # cursor.fetchall()
+
+        try:
+            cursor.execute(query)
+        except Exception as e:
+            print("Error executing query:", e)  # This will print the error thrown by Memgraph
+            return None
         cursor.fetchall()
 
     def execute_and_fetch(self, query: str) -> Iterator[Dict[str, Any]]:
