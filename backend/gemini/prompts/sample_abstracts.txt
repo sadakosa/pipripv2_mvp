@@ -1,4 +1,4 @@
-[
+Input = [
   {
     "id": "5278a8eb2ba2429d4029745caf4e661080073c81",
     "title": "Generative Agents: Interactive Simulacra of Human Behavior",

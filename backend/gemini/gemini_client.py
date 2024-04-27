@@ -5,7 +5,11 @@ import json
 
 from backend.global_methods import load_yaml_config, read_txt
 from backend.topic import Topic
+from backend.edge import Edge
+from backend.graph import L2Graph, L1Graph
 
+# Constants
+NUM_RETRIES = 5
 
 class GeminiClient:
     def __init__(self):
@@ -31,8 +35,77 @@ class GeminiClient:
         response = self.client.generate_content(prompt)
         print(response.text)
         return response
+    
+    # Generates the L2 topics from paper abstract, and edges between the topics
+    def generate_l2_topic_graph(self):
+        prompt = read_txt(f"{self.prompts_path}/generate_l2_topic_graph.txt")
+        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
+        full_prompt = prompt + test_abstracts
 
-    def generate_topics_from_abstracts(self):
+        topics = []
+        edges = []
+        success = False
+        # Retry for NUM_RETRIES times, because sometimes the output may not be correct JSON or empty
+        for i in range(NUM_RETRIES):
+            if success:
+                break
+            # Send request to gemini
+            print("Generating L2 topic graph...")
+            response = self.send_single_prompt(full_prompt)
+            try:
+                json_result = json.loads(response.text)
+                for d in json_result["topics"]:
+                    topic = Topic(d)
+                    topics.append(topic)
+                for d in json_result["edges"]:
+                    edge = Edge(d)
+                    edges.append(edge)
+
+                # l2graph = L2Graph(topics, edges)
+                success = True
+            except json.JSONDecodeError as e:
+                print("Error parsing JSON:", e)
+                continue
+            
+        # TODO: returning tuple of topics & edges for now, to decide where we want to combine w the papers list to make the graph object
+        return (topics, edges)
+
+    # Summarise L2 topics into L1 topics, and generate edges between the topics
+    def generate_l1_topic_graph(self):
+        prompt = read_txt(f"{self.prompts_path}/generate_l1_topic_graph.txt")
+        test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"  # TODO: replace with actual DB query
+        full_prompt = prompt + test_topics
+
+        topics = []
+        edges = []
+        success = False
+        # Retry for NUM_RETRIES times, because sometimes the output may not be correct JSON or empty
+        for i in range(NUM_RETRIES):
+            if success:
+                break
+            # Send request to gemini
+            print("Generating L1 topic graph...")
+            response = self.send_single_prompt(full_prompt)
+            try:
+                json_result = json.loads(response.text)
+                for d in json_result["topics"]:
+                    topic = Topic(d)
+                    topics.append(topic)
+                for d in json_result["edges"]:
+                    edge = Edge(d)
+                    edges.append(edge)
+
+                l1graph = L1Graph(topics, edges)
+                success = True
+            except json.JSONDecodeError as e:
+                print("Error parsing JSON:", e)
+                continue
+
+        return l1graph
+
+    # === testing ===
+    # For testing L2 topics generation 
+    def test_generate_topics_from_abstracts(self):
         generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
         test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
         response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
@@ -47,6 +120,7 @@ class GeminiClient:
             print("Error parsing JSON:", e)
         return topics
 
+    # Summarise L2 topics into L1 topics
     def summarize_topics(self):
         summarize_topics_prompt = read_txt(f"{self.prompts_path}/summarize_topics.txt")
         test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"  # TODO: replace with actual DB query
@@ -61,3 +135,23 @@ class GeminiClient:
         except json.JSONDecodeError as e:
             print("Error parsing JSON:", e)
         return topics
+
+    # For testing edge generation
+    # actual edge generation is combined into generate_l2_topic_graph & generate_l1_topic_graph
+    def test_generate_edges(self):
+        prompt = read_txt(f"{self.prompts_path}/generate_topic_edges.txt")
+        test_topics = read_txt(f"{self.prompts_path}/sample_topics.txt")
+        # full_prompt = generate_edges_prompt.format(input=test_topics)
+        # full_prompt = generate_edges_prompt
+        full_prompt = prompt + test_topics
+        print(full_prompt)
+        response = self.send_single_prompt(full_prompt)
+        edges = []
+        try:
+            json_array = json.loads(response.text)
+            for d in json_array:
+                edge = Edge(d)
+                edges.append(edge)
+        except json.JSONDecodeError as e:
+            print("Error parsing JSON:", e)
+        return edges

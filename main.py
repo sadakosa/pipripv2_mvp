@@ -1,4 +1,4 @@
-# from backend.gemini.gemini_client import GeminiClient
+from backend.gemini.gemini_client import GeminiClient
 from backend.paper import Paper
 from backend.api_utils.semantic_scholar_utils import search_papers_by_id
 from backend.db_queries.query_generator import QueryGenerator
@@ -23,8 +23,9 @@ def main():
     
     print(papers)
     # Gemini
-    # gem = GeminiClient()
+    gem = GeminiClient()
     # print(gem.generate_topics_from_abstracts())
+    gem.generate_l1_topic_graph()
 
     '''
     Gemini output
