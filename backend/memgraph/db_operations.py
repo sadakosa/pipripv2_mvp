@@ -8,8 +8,10 @@ def clear(db):
 
 
 def populate_database(db, path):
-    file = open(path)
-    lines = file.readlines()
+    with open(path, 'r', encoding='windows-1252') as file:  # Adjust the encoding if necessary
+        lines = file.readlines()
+    # file = open(path)
+    # lines = file.readlines()
     file.close()
     for line in lines:
         if len(line.strip()) != 0 and line[0] != '/':
