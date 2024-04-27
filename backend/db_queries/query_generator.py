@@ -26,8 +26,7 @@ class QueryGenerator:
         f.write(f"MATCH (n1:{relationship.source_type} {{id: '{cleanse(relationship.source)}'}}), (n2:{relationship.target_type} {{id: '{cleanse(relationship.target)}'}}) CREATE (n1)-[:{relationship.label}]->(n2);\n")  # edge
 
     def generate_paper_query(self, paper, f):
-        paper_query = f"CREATE (n:Paper {{ id: '{cleanse(paper.title)}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{paper.title}', abstract: '{clean_latex(paper.abstract)}', authors: {[cleanse(a) for a in paper.authors]}, publication_date: '{paper.publication_date}'}});\n"
-        print("paper id: ", cleanse(paper.title))
+        paper_query = f"CREATE (n:Paper {{ id: '{cleanse(paper.title)}', arxiv_id: '{paper.arxiv_id}', url: '{paper.url}', citation_count: '{paper.citation_count}', title: '{paper.title}', abstract: '{cleanse(paper.abstract)}', authors: {[cleanse(a) for a in paper.authors]}, publication_date: '{paper.publication_date}'}});\n"
         f.write(paper_query)
         
         for r in paper.references:
