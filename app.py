@@ -10,7 +10,7 @@ app = Flask(__name__)
 def index():
     db = Memgraph()
     db_operations.clear(db)
-    db_operations.populate_database(db, "backend/resources/dev_data.txt")
+    db_operations.populate_database(db, "backend/db_queries/dev_data.txt")
     return render_template('index.html')
 
 @app.route('/query')

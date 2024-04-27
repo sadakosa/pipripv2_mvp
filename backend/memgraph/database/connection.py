@@ -63,6 +63,7 @@ class MemgraphConnection(Connection):
             cursor.execute(query)
         except Exception as e:
             print("Error executing query:", e)  # This will print the error thrown by Memgraph
+            print("query: ", query)
             return None
         cursor.fetchall()
 
