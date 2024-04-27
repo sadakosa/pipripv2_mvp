@@ -222,6 +222,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
+        event.subject.fixed = true;
         d.fx = null;
         d.fy = null;
     }
