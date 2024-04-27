@@ -9,6 +9,7 @@ from backend.pdf_parsers import extract_references_from_pdf, find_arxiv_ids_in_t
 
 class Paper:
     def __init__(self, ss_data):
+        self.type = "Paper"
         self.paper_id = ss_data.get("paperId")
         self.arxiv_id = ss_data.get("externalIds", dict()).get('ArXiv', "")
         self.url = ss_data.get("url", "")

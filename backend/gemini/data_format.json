@@ -1,15 +1,19 @@
 
 {
     "topic": {
+        "type": "Topic",
         "id": "name",
         "description": "description"
     },
     "relationship": {
+        "source_type": "Paper",
+        "target_type": "Topic",
         "source": "id",
         "target": "id",
         "label": "label"
     },
     "paper": {
+        "type": "Paper",
         "id": "id",
         "arxiv_id": "arxiv_id",
         "url": "url",
