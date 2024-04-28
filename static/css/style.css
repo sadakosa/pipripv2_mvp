@@ -37,3 +37,23 @@ pre {
 .key {
     color: red;
 }
+
+
+/* sidebar */
+
+.main-container {
+    display: flex;
+    height: 100vh; /* Adjust based on your layout needs */
+}
+
+.sidebar {
+    width: 20%; /* Adjust the width of the sidebar */
+    background-color: #f4f4f4; /* Background color for the sidebar */
+    padding: 20px;
+    overflow-y: auto; /* Enables scroll if content is too long */
+}
+
+.container {
+    flex-grow: 1; /* Takes up remaining space */
+    overflow: hidden; /* Prevents overflow issues */
+}
