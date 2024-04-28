@@ -67,24 +67,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .selectAll("line")
         .data(d3links)
         .enter().append("line");
-
-    // Append lines for each link
-    // link.append("line")
-    //     .attr("id", d => `link-${d.source.id}-${d.target.id}`) // Add ID to each link for hover over features
-    //     .attr("stroke-width", 2)
-    //     .attr("stroke", "#aaa");
-
-    link.append("line")
-        .attr("id", function (d) {
-            // console.log("damn", d);
-            // console.log("damn", d.source);
-            // console.log("damn", d.source.id);
-            // console.log(`link-${d.source}-${d.target}`);
-            return  `link-${d.source}-${d.target}`;        
-        }) // Add ID to each link for hover over features
-        .attr("stroke-width", 2)
-        .attr("stroke", "#aaa");
-
+        
     // Append text labels to each link
     var linkLabel = g.append("g")
         .attr("class", "link-labels")
@@ -107,7 +90,6 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     
     // Append circle to each node group
     node.append("circle")
-        .attr("id", d => `node-${d.id}`) // Added ID to each node for hover over features
         .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
@@ -117,15 +99,12 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             }
         })
         .on("mouseover", function(d) {
-            highlightNode.call(this, d);
-
             if (d.type === "topic") {
                 updateSidebar(`<b>Hovered on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
             } else if (d.type === "paper") {
                 updateSidebar(`<b>Hovered on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
             }
         })
-        .on("mouseout", resetHighlights)
         .on("click", function(d) {
             if (d.type === "topic") {
                 updateSidebar(`<b>Clicked on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
@@ -133,8 +112,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 updateSidebar(`<b>Clicked on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
             }
         });
-
-
+    
     // Append text to each node group
     node.append("text")
         .attr("x", 0) // Center text horizontally on the circle's center
@@ -315,38 +293,6 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     function updateSidebar(content) {
         document.getElementById('sidebar-content').innerHTML = content;
-    }
-
-    
-    // =============================================================
-    // Function to highlight nodes and links when hovered over
-    // =============================================================
-
-    // Function to highlight nodes and links
-    function highlightNode(d) {
-        // Set all nodes and links to faded state
-        svg.selectAll(".node circle").classed("faded", true);
-        svg.selectAll(".links line").classed("faded", true);
-
-        // Highlight the current node
-        d3.select(this).classed("highlight-node", true).classed("faded", false);
-        
-        // Highlight all connected links and the nodes at their ends
-        d3links.forEach(link => {
-            if (link.source === d || link.target === d) {
-                // Highlight this link
-                d3.select(`#link-${link.source.id}-${link.target.id}`).classed("highlight-link", true).classed("faded", false);
-                // Highlight the connected nodes
-                d3.select(`#node-${link.source.id}`).classed("highlight-node", true).classed("faded", false);
-                d3.select(`#node-${link.target.id}`).classed("highlight-node", true).classed("faded", false);
-            }
-        });
-    }
-
-    // Function to reset highlights
-    function resetHighlights() {
-        svg.selectAll(".node circle").classed("highlight-node", false).classed("faded", false);
-        svg.selectAll(".links line").classed("highlight-link", false).classed("faded", false);
     }
 
 })();
