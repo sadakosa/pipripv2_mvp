@@ -116,16 +116,20 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     // Append text to each node group
     node.append("text")
         .attr("x", 0) // Center text horizontally on the circle's center
-        .attr("y", ".31em") // Center text vertically relative to circle
+        .attr("y", ".35em") // Center text vertically relative to circle
         .attr("text-anchor", "middle") // Align text around its middle point
         .each(function(d) {
             const lines = splitText(d.getLabel(), 30); 
+            const line_count = lines.length;
+            const line_height = 1.2;  // Line height in ems
+            const initial_offset = -(line_height / 2) * (line_count - 1) + "em";  // Vertical shift to center the block
+            
             const tspans = d3.select(this).selectAll('tspan')
                 .data(lines)
                 .enter()
                 .append('tspan')
                 .attr("x", 0) 
-                .attr("dy", (d, i) => `${i > 0 ? 1.2 : 0}em`)  // Adjust vertical position, 1.2em for new lines, 0 for the first (to ensure that the lines are evenly spaced)
+                .attr("dy", (d, i) => i === 0 ? initial_offset : `${line_height}em`)  // Adjust vertical position
                 .text(d => d);
         })
         .style("font-size", "12px")
