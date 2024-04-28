@@ -2,12 +2,12 @@ body {
     background-color: lightgrey;
 }
 
-.links line {
+.normal-lines {
     stroke: #aaa;
-
+    stroke-width: 2;
 }
 
-.nodes circle {
+.node circle {
     pointer-events: all;
     stroke: none;
     stroke-width: 40px;

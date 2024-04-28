@@ -66,24 +66,10 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .attr("class", "links")
         .selectAll("line")
         .data(d3links)
-        .enter().append("line");
-
-    // Append lines for each link
-    // link.append("line")
-    //     .attr("id", d => `link-${d.source.id}-${d.target.id}`) // Add ID to each link for hover over features
-    //     .attr("stroke-width", 2)
-    //     .attr("stroke", "#aaa");
-
-    link.append("line")
-        .attr("id", function (d) {
-            // console.log("damn", d);
-            // console.log("damn", d.source);
-            // console.log("damn", d.source.id);
-            // console.log(`link-${d.source}-${d.target}`);
-            return  `link-${d.source}-${d.target}`;        
-        }) // Add ID to each link for hover over features
-        .attr("stroke-width", 2)
-        .attr("stroke", "#aaa");
+        .enter()
+        .append("line")
+            .attr("id", d => `link-${d.source}-${d.target}`) // Add ID to each link for hover over features
+            .attr("class", "normal-lines") 
 
     // Append text labels to each link
     var linkLabel = g.append("g")
@@ -333,6 +319,8 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         
         // Highlight all connected links and the nodes at their ends
         d3links.forEach(link => {
+            console.log(link.source, link.target, d)
+            console.log(returnMatch(link, d))
             if (link.source === d || link.target === d) {
                 // Highlight this link
                 d3.select(`#link-${link.source.id}-${link.target.id}`).classed("highlight-link", true).classed("faded", false);
@@ -341,6 +329,14 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 d3.select(`#node-${link.target.id}`).classed("highlight-node", true).classed("faded", false);
             }
         });
+    }
+
+    function returnMatch(link, d) {
+        if (link.source === d || link.target === d) {
+            return [link.source.id, d.id];
+        } else {
+            return "no match";
+        }
     }
 
     // Function to reset highlights
