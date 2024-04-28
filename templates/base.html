@@ -13,6 +13,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
 
+    <script type="text/javascript" src="static/js/input_progress_handler.js"></script>
+
     <title>Social Network Graph Demo</title>
 </head>
 
@@ -37,11 +39,12 @@
 
     {% block content %} {% endblock %}
 
-    <form action="/process_input" method="POST">
+    <form id="input_form" action="/process_input" method="POST">
         <label for="paper_id">Enter Semantic Scholar or Arxiv ID:</label>
         <input type="text" id="paper_id" name="paper_id">
         <button type="submit">Submit</button>
     </form>
+    <div id="progress_text" style="display:none;">Building graph...</div>
 </body>
 
 </html>
