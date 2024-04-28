@@ -42,8 +42,12 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     // console.log(d3links);
 
     // === Create d3 graph
-    const width = 1200; 
-    const height = 1000;
+    const width = document.documentElement.clientWidth; 
+    const height = document.documentElement.clientHeight * 0.9;
+
+    console.log("Width and height:");
+    console.log(width, height);
+
     var svg = d3.select("svg")
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `0 0 ${width} ${height}`);
@@ -265,7 +269,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     window.addEventListener("resize", function() {
     // Code to handle resizing or rerendering of SVG
         var width = document.documentElement.clientWidth;  
-        var height = document.documentElement.clientHeight; 
+        var height = document.documentElement.clientHeight * 0.9; 
         svg.attr('viewBox', `0 0 ${width} ${height}`);
     });
 
