@@ -40,7 +40,7 @@ export class D3PaperNode extends D3Node {
     }
 
     getDetails() {
-        return `Authors: ${this.authors}\SS ID: ${this.ss_id}\nTitle: ${this.title}\Abstract: ${this.abstract}`;
+        return `Authors: ${this.authors}\SS ID: ${this.ss_id}\nTitle: ${this.title}\nAbstract: ${this.abstract}`;
     }
 }
 
