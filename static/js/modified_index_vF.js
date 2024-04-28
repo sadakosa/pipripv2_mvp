@@ -42,9 +42,11 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     // console.log(d3links);
 
     // === Create d3 graph
-    var svg = d3.select("svg"),
-        width = +svg.attr("width"),
-        height = +svg.attr("height");
+    const width = 1200; 
+    const height = 1000;
+    var svg = d3.select("svg")
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .attr("viewBox", `0 0 ${width} ${height}`);
 
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
@@ -255,5 +257,12 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         d.fx = null;
         d.fy = null;
     }
+
+    window.addEventListener("resize", function() {
+    // Code to handle resizing or rerendering of SVG
+        var width = document.documentElement.clientWidth;  
+        var height = document.documentElement.clientHeight; 
+        svg.attr('viewBox', `0 0 ${width} ${height}`);
+    });
 
 })();

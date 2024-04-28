@@ -37,3 +37,19 @@ pre {
 .key {
     color: red;
 }
+
+
+/* To make the SVG responsive */
+svg {
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;  
+    max-height: 1000px; 
+    display: block; 
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px; 
+    margin: auto;      
+}
