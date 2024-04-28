@@ -52,6 +52,22 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
+    // Define the marker for the arrow heads
+    svg.append("defs").selectAll("marker")
+        .data(["end"])      // Different marker types can be defined here
+        .enter().append("marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 70)   // Controls the distance of the marker from the node
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto") 
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .attr("class", "arrowHead")
+        .style("fill", "#999"); // Set the color of the arrow
+
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
         .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
@@ -70,6 +86,8 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .append("line")
             .attr("id", d => `link-${d.source}-${d.target}`) // Add ID to each link for hover over features
             .attr("class", "normal-lines") 
+            .attr("marker-end", "url(#arrow)");  // Use the arrow marker
+
 
     // Append text labels to each link
     var linkLabel = g.append("g")
@@ -281,13 +299,13 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
-        
+        event.subject.fixed = true;
         d.fx = null;
         d.fy = null;
         
-        if (!d.fixed) { 
-            d.fixed = true; 
-        }
+        // if (!d.fixed) { 
+        //     d.fixed = true; 
+        // }
     }
 
     window.addEventListener("resize", function() {
