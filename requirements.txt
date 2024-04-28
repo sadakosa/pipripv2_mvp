@@ -1,4 +1,6 @@
-requests==2.26.0
-bs4==0.0.2
 arxiv==2.1.0
-pdfplumber
+google-generativeai==0.5.2
+PyYAML==6.0.1
+requests==2.31.0
+Unidecode==1.3.8
+packaging==23.1

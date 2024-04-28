@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "sng-demo"
+name = "pip-rip"
 version = "0.1.0"
-description = ""
-authors = ["Ivan Despot <ivan.despot@memgraph.io>"]
+description = "A knowledge graph generator for research papers"
+authors = ["Chelsea Chia, Lilian Guo, Sabrina Chow"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.9,<4.0"
 flask = "^1.1.2"
 pymgclient = "^1.1.0"
 

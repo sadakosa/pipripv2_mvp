@@ -1,4 +1,4 @@
-FROM python:3.7-slim-bullseye
+FROM python:3.9-slim-bullseye
 
 # Install pymgclient
 RUN apt-get update && \
@@ -17,11 +17,12 @@ RUN pip install poetry
 # ENV PATH="${PATH}:/root/.poetry/bin"
 
 WORKDIR /app
-COPY poetry.lock pyproject.toml /app/
+COPY poetry.lock pyproject.toml requirements.txt /app/
 
 
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
+RUN pip install -r requirements.txt
 
 COPY . /app
 EXPOSE 5000

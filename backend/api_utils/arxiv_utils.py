@@ -2,22 +2,22 @@
 
 import requests
 from arxiv import Search, Client
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 import os
 
 
-def get_paper_abstract_from_web(paper_id):
-    # Define the base URL for the arXiv paper
-    base_url = 'http://arxiv.org/abs/'
-    url = base_url + paper_id
-
-    # Send a GET request to the arXiv paper & the abstract element within the HTML structure
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    abstract = soup.find('blockquote', {'class': 'abstract mathjax'})
-    abstract_text = abstract.text
-
-    return abstract_text
+# def get_paper_abstract_from_web(paper_id):
+#     # Define the base URL for the arXiv paper
+#     base_url = 'http://arxiv.org/abs/'
+#     url = base_url + paper_id
+#
+#     # Send a GET request to the arXiv paper & the abstract element within the HTML structure
+#     response = requests.get(url)
+#     soup = BeautifulSoup(response.content, 'html.parser')
+#     abstract = soup.find('blockquote', {'class': 'abstract mathjax'})
+#     abstract_text = abstract.text
+#
+#     return abstract_text
 
 
 def search_papers_by_arxiv_id(paper_ids):

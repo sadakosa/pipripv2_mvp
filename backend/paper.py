@@ -1,9 +1,9 @@
 import json
 import os
 
-from backend.api_utils.arxiv_utils import search_papers_by_arxiv_id
+# from backend.api_utils.arxiv_utils import search_papers_by_arxiv_id
 from backend.api_utils.semantic_scholar_utils import get_references, get_citations
-from backend.pdf_parsers import extract_references_from_pdf, find_arxiv_ids_in_text
+# from backend.pdf_parsers import extract_references_from_pdf, find_arxiv_ids_in_text
 
 
 class Paper:
@@ -125,10 +125,10 @@ class Paper:
 
     # Manually parse references from downloaded pdf (slow and might be inaccurate depending on citation style)
     # If the references contain arxiv IDs, batch the IDs and send arxiv request to flesh out contents
-    def populateReferencesUsingPdf(self, pdf_path):
-        references_block = extract_references_from_pdf(pdf_path)
-        arxiv_ids = find_arxiv_ids_in_text(references_block)
-        results = search_papers_by_arxiv_id(arxiv_ids)
-        for res in results:
-            referenced_paper = Paper.from_arxiv(res)
-            self.references.append(referenced_paper)
+    # def populateReferencesUsingPdf(self, pdf_path):
+    #     references_block = extract_references_from_pdf(pdf_path)
+    #     arxiv_ids = find_arxiv_ids_in_text(references_block)
+    #     results = search_papers_by_arxiv_id(arxiv_ids)
+    #     for res in results:
+    #         referenced_paper = Paper.from_arxiv(res)
+    #         self.references.append(referenced_paper)
