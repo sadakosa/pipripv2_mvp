@@ -18,7 +18,7 @@ def search_papers_by_id(ss_ids=[], arxiv_ids=[]):
         return None
 
 
-def get_citations(ss_id, limit=20):
+def get_citations(ss_id, limit=10):
     url = f'https://api.semanticscholar.org/graph/v1/paper/{ss_id}/citations'
     query_params = {'limit': limit, 'fields': 'title,url,abstract,publicationDate,authors,externalIds,citationCount'}
     response = requests.get(url, params=query_params)
@@ -31,7 +31,7 @@ def get_citations(ss_id, limit=20):
         return []
 
 
-def get_references(ss_id, limit=20):
+def get_references(ss_id, limit=10):
     url = f'https://api.semanticscholar.org/graph/v1/paper/{ss_id}/references'
     query_params = {'limit': limit, 'fields': 'title,url,abstract,publicationDate,authors,externalIds,citationCount'}
     response = requests.get(url, params=query_params)
