@@ -97,6 +97,20 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             } else if (d.type === "paper") {
                 return `gray`;
             }
+        })
+        .on("mouseover", function(d) {
+            if (d.type === "topic") {
+                updateSidebar(`<b>Hovered on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
+            } else if (d.type === "paper") {
+                updateSidebar(`<b>Hovered on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
+            }
+        })
+        .on("click", function(d) {
+            if (d.type === "topic") {
+                updateSidebar(`<b>Clicked on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
+            } else if (d.type === "paper") {
+                updateSidebar(`<b>Clicked on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
+            }
         });
     
     // Append text to each node group
@@ -138,8 +152,8 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     }
 
     // To add hover over display of node details
-    node.append("title")
-        .text(d => d.getDetails());
+    // node.append("title")
+    //     .text(d => d.getDetails());
     
     
     // -- replaced by @gl changes
@@ -272,5 +286,9 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         var height = document.documentElement.clientHeight * 0.9; 
         svg.attr('viewBox', `0 0 ${width} ${height}`);
     });
+
+    function updateSidebar(content) {
+        document.getElementById('sidebar-content').innerHTML = content;
+    }
 
 })();
