@@ -3,6 +3,9 @@ import re
 
 
 def cleanse(s):
+    if s is None:
+        return ""
+
     pattern = r'[%$\\]'
     ascii_s = unidecode(s)
     s_without_special_chars = re.sub(pattern, '', ascii_s)
