@@ -4,6 +4,7 @@ body {
 
 .links line {
     stroke: #aaa;
+
 }
 
 .nodes circle {
@@ -38,6 +39,21 @@ pre {
     color: red;
 }
 
+/* hover over */
+
+.highlight-node {
+    fill: orange; /* Change fill color when node is highlighted */
+}
+
+.highlight-link {
+    stroke: red; /* Change stroke color when link is highlighted */
+    stroke-width: 3px; /* Make link stroke wider when highlighted */
+}
+
+.faded {
+    opacity: 0.1; /* Fade unhighlighted nodes and links */
+}
+
 
 /* sidebar */
 
@@ -57,3 +73,8 @@ pre {
     flex-grow: 1; /* Takes up remaining space */
     overflow: hidden; /* Prevents overflow issues */
 }
+
+
+/* .normal-links-style line {
+    stroke: #aaa;
+} */
