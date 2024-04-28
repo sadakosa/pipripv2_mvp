@@ -55,6 +55,7 @@ pre {
 }
 
 
+
 /* sidebar */
 
 .main-container {
@@ -73,8 +74,3 @@ pre {
     flex-grow: 1; /* Takes up remaining space */
     overflow: hidden; /* Prevents overflow issues */
 }
-
-
-/* .normal-links-style line {
-    stroke: #aaa;
-} */

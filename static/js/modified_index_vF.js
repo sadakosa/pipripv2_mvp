@@ -93,7 +93,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     
     // Append circle to each node group
     node.append("circle")
-        .attr("id", d => `node-${d.id}`) // Added ID to each node for hover over features
+        .attr("id", d => `node-${d.id}`) // Add ID to each node for hover over features
         .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
@@ -104,7 +104,6 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         })
         .on("mouseover", function(d) {
             highlightNode.call(this, d);
-
             if (d.type === "topic") {
                 updateSidebar(`<b>Hovered on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
             } else if (d.type === "paper") {
@@ -119,8 +118,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 updateSidebar(`<b>Clicked on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
             }
         });
-
-
+    
     // Append text to each node group
     node.append("text")
         .attr("x", 0) // Center text horizontally on the circle's center
