@@ -14,7 +14,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     let responseString = await response.json();
     let responseJSON = JSON.parse(responseString);
-    console.log(responseJSON);
+    // console.log(responseJSON);
 
     let d3nodes = [];
     for (node of responseJSON.nodes) {
@@ -38,8 +38,8 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     for (link of responseJSON.links) {
         d3links.push(new D3Link(link.source, link.target, link.label));
     }
-    console.log(d3nodes);
-    console.log(d3links);
+    // console.log(d3nodes);
+    // console.log(d3links);
 
     // === Create d3 graph
     var svg = d3.select("svg"),
@@ -95,13 +95,42 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     
     // Append text to each node group
     node.append("text")
-        .attr("x", 0)  // Center text horizontally on the circle's center
-        .attr("y", ".31em")  // Center text vertically relative to circle
-        .attr("text-anchor", "middle")  // Align text around its middle point
-        .text(d => d.getLabel())
+        .attr("x", 0) // Center text horizontally on the circle's center
+        .attr("y", ".31em") // Center text vertically relative to circle
+        .attr("text-anchor", "middle") // Align text around its middle point
+        .each(function(d) {
+            const lines = splitText(d.getLabel(), 30); 
+            const tspans = d3.select(this).selectAll('tspan')
+                .data(lines)
+                .enter()
+                .append('tspan')
+                .attr("x", 0) 
+                .attr("dy", (d, i) => `${i > 0 ? 1.2 : 0}em`)  // Adjust vertical position, 1.2em for new lines, 0 for the first (to ensure that the lines are evenly spaced)
+                .text(d => d);
+        })
         .style("font-size", "12px")
         .style("font-family", "Arial, sans-serif");
+
+
+    function splitText(text, maxLength) {
+        let words = text.split(/\s+/);
+        let lines = [];
+        let currentLine = words[0];
     
+        for (let i = 1; i < words.length; i++) {
+            let word = words[i];
+            if (currentLine.length + word.length + 1 <= maxLength) {
+                currentLine += " " + word;
+            } else {
+                lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+        lines.push(currentLine);
+
+        return lines; // Returns an array of lines
+    }
+
     // To add hover over display of node details
     node.append("title")
         .text(d => d.getDetails());
