@@ -20,6 +20,8 @@ def index():
 @app.route('/clear_db', methods=['POST'])
 def clear_db():
     db_operations.clear(db)
+    # print(db_operations.get_topic_topic_edges(db), 1)
+    # db_operations.delete_topic_topic_edges(db)
     return render_template('index.html')
 
 @app.route('/process_input', methods=['POST'])
@@ -37,9 +39,13 @@ def process_input():
     elif len(paper_id) == 40 and paper_id.islower() and paper_id.isalnum():
         ss_ids.append(paper_id)
 
+    # Retrieve existing topics to regenerate the topic-topic edges
+    existing_topics = db_operations.get_topics(db)
+
     # Build graph, add nodes and edges to DB
-    graph = build_graph_from_paper_ids(arxiv_ids, ss_ids, get_citations, get_references)
+    graph = build_graph_from_paper_ids(arxiv_ids, ss_ids, get_citations, get_references, existing_topics)
     queries = generate_queries_for_graph(graph)
+    db_operations.delete_topic_topic_edges(db)
     for q in queries:
         db.execute_query(q)
 
