@@ -94,14 +94,15 @@ class GeminiClient:
             
         return topics, edges
 
-    # Summarise L2 topics into L1 topics, and generate edges between the topics
-    def generate_l1_topics_and_edges(self, l2_topics: list[Topic]):
-        prompt = read_txt(f"{self.prompts_path}/generate_l1_topic_graph.txt")
-        topic_ids = [t.id for t in l2_topics]
+    # Summarise existing topics into broader topics, and generate edges between the topics
+    def generate_l1_topics_and_edges(self, existing_topics: list[Topic]):
+        prompt = read_txt(f"{self.prompts_path}/generate_topic_topic_edges.txt")
+        topic_ids = [t.id for t in existing_topics]
 
-        topics = []
+        new_topics = []
         edges = []
         success = False
+        existing_topic_ids = set([t.id for t in existing_topics])
         # Retry for NUM_RETRIES times, because sometimes the output may not be correct JSON or empty
         for i in range(NUM_RETRIES):
             if success:
@@ -111,33 +112,48 @@ class GeminiClient:
             response = self.send_single_prompt([', '.join(topic_ids), prompt])
             try:
                 json_result = json.loads(response.text)
-                for d in json_result["topics"]:
-                    if not d.get("topic_ids"):  # skip topics with no linked topics
-                        continue
-                    topic = Topic(d)
-                    topics.append(topic)
-                    for topic_id in d.get("topic_ids"):
-                        edge = Edge({
-                            "source_type": "Topic",
-                            "target_type": "Topic",
-                            "source": topic_id,
-                            "target": topic.id,
-                            "label": "is_subset_of"
-                        })
-                        edges.append(edge)
-                for d in json_result["edges"]:
-                    d['label'] = d.get('label').replace(" ", "_")
-                    edge = Edge(d)
-                    edge.source_type = "Topic"
-                    edge.target_type = "Topic"
+                for e in json_result:
+                    source = e.get("source")
+                    target = e.get("target")
+                    edge = Edge({
+                        "source_type": "Topic",
+                        "target_type": "Topic",
+                        "source": source,
+                        "target": target,
+                        "label": e.get("label").replace(" ", "_")
+                    })
                     edges.append(edge)
+                    if source not in existing_topic_ids:
+                        new_topics.append(Topic({"id": source}))
+                    if target not in existing_topic_ids:
+                        new_topics.append(Topic({"id": target}))
+                # for d in json_result["topics"]:
+                #     if not d.get("topic_ids"):  # skip topics with no linked topics
+                #         continue
+                #     topic = Topic(d)
+                #     topics.append(topic)
+                #     for topic_id in d.get("topic_ids"):
+                #         edge = Edge({
+                #             "source_type": "Topic",
+                #             "target_type": "Topic",
+                #             "source": topic_id,
+                #             "target": topic.id,
+                #             "label": "subdomain_of"
+                #         })
+                #         edges.append(edge)
+                # for d in json_result["edges"]:
+                #     d['label'] = d.get('label').replace(" ", "_")
+                #     edge = Edge(d)
+                #     edge.source_type = "Topic"
+                #     edge.target_type = "Topic"
+                #     edges.append(edge)
 
                 success = True
             except json.JSONDecodeError as e:
                 print("Error parsing JSON:", e)
                 continue
 
-        return topics, edges
+        return new_topics, edges
 
     # === testing ===
     # For testing L2 topics generation 
