@@ -1,5 +1,7 @@
 import json
 
+from backend.topic import Topic
+
 
 def clear(db):
     command = "MATCH (node) DETACH DELETE node"
@@ -57,16 +59,38 @@ def get_nodes(db):
 
 def get_topics(db):
     command = "MATCH (n:Topic) RETURN n;"
-    topics = db.execute_and_fetch(command)
+    topics_data = db.execute_and_fetch(command)
 
-    node_objects = []
-    for topic in topics:
-        n = topic['n']
-        data = {
+    topics = []
+    for d in topics_data:
+        n = d['n']
+        topic_dict = {
             "id": n.properties['id'],
             "description": n.properties['description']
         }
-    return json.dumps(node_objects)
+        topic = Topic(topic_dict)
+        topics.append(topic)
+    return topics
+
+
+def get_topic_topic_edges(db):
+    command = "MATCH (n1: Topic)-[r]-(n2: Topic) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
+    edges = db.execute_and_fetch(command)
+
+    node_objects = []
+    for edge in edges:
+        data = {
+            "source": edge['n1'].properties['id'],
+            "target": edge['n2'].properties['id'],
+            "label": edge['label']
+        }
+        node_objects.append(data)
+    return node_objects
+
+
+def delete_topic_topic_edges(db):
+    command = "MATCH (n1: Topic)-[r]-(n2: Topic) DELETE r;"
+    db.execute_query(command)
 
 
 def get_relationships(db):
@@ -75,7 +99,7 @@ def get_relationships(db):
         relationships = db.execute_and_fetch(command)
 
         relationship_objects = []
-        print(relationships)
+        # print(relationships)
         for relationship in relationships:
             source = relationship.get('source', 'No Source')
             target = relationship.get('target', 'No Target')
@@ -142,7 +166,7 @@ def get_graph(db):
     #         added_nodes.append(n.id)
     for relationship in relationships:
         r = relationship['r']
-        print(relationship)
+        # print(relationship)
         data = {
             "source": relationship['n1'].properties['id'],
             "target": relationship['n2'].properties['id'],

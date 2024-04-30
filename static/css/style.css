@@ -74,3 +74,14 @@ pre {
     flex-grow: 1; /* Takes up remaining space */
     overflow: hidden; /* Prevents overflow issues */
 }
+
+#input_form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 10px;
+}
+
+#input_form label {
+    white-space: nowrap;
+}

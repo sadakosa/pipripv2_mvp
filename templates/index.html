@@ -10,9 +10,19 @@
         <form id="input_form" action="/process_input" method="POST">
             <label for="paper_id">Enter Semantic Scholar or Arxiv ID:</label>
             <input type="text" id="paper_id" name="paper_id">
+
+            <input type="checkbox" id="citations_checkbox" name="citations_checkbox" value="on"><br>
+            <label for="citations_checkbox">Citations</label>
+
+            <input type="checkbox" id="references_checkbox" name="references_checkbox" value="on"><br>
+            <label for="references_checkbox">References</label>
+
             <button type="submit">Submit</button>
         </form>
         <div id="progress_text" style="display:none;">Building graph...</div>
+
+        <button id="clear_button">Clear Graph</button>
+        <script type="text/javascript" src="static/js/clear_button.js"></script>
     </div>
 </div>
 <script type="module" src="/static/js/modified_index_vF.js" charset="utf-8"></script>
