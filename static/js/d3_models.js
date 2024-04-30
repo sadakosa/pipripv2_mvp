@@ -58,3 +58,12 @@ export class D3Link {
         return this.relationship_type;
     }
 }
+
+export class D3Graph {
+    nodes;
+    edges;
+    constructor(nodes, edges) {
+        this.nodes = nodes;
+        this.edges = edges;
+    }
+}
