@@ -5,15 +5,21 @@ var isLevel2 = true;
 
 
 // SVG set up
-var svg = d3.select("svg"),
-width = +svg.attr("width"),
-height = +svg.attr("height");
+const width = document.documentElement.clientWidth; 
+const height = document.documentElement.clientHeight * 0.9;
+
+console.log("Width and height:");
+console.log(width, height);
+
+var svg = d3.select("svg")
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .attr("viewBox", `0 0 ${width} ${height}`);
 
 var simulation = d3.forceSimulation()
-.force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
-.force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
-.force("center", d3.forceCenter(width / 2, height / 2))
-.force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
+    .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
 
 
 var l2Graph;
@@ -174,7 +180,7 @@ function generateSvgGraph(graph) {
     console.log(d3nodes);
 
     var g = svg.append("g")
-    .attr("class", "everything");
+        .attr("class", "everything");
 
     var link = g.append("g")
         .attr("class", "links")
@@ -211,21 +217,69 @@ function generateSvgGraph(graph) {
             } else if (d.type === "paper") {
                 return `gray`;
             }
+        })
+        .on("mouseover", function(d) {
+            if (d.type === "topic") {
+                updateSidebar(`<b>Hovered on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
+            } else if (d.type === "paper") {
+                updateSidebar(`<b>Hovered on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
+            }
+        })
+        .on("click", function(d) {
+            if (d.type === "topic") {
+                updateSidebar(`<b>Clicked on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
+            } else if (d.type === "paper") {
+                updateSidebar(`<b>Clicked on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
+            }
         });
     
     // Append text to each node group
     node.append("text")
-        .attr("x", 0)  // Center text horizontally on the circle's center
-        .attr("y", ".31em")  // Center text vertically relative to circle
-        .attr("text-anchor", "middle")  // Align text around its middle point
-        .text(d => d.getLabel())
+        .attr("x", 0) // Center text horizontally on the circle's center
+        .attr("y", ".35em") // Center text vertically relative to circle
+        .attr("text-anchor", "middle") // Align text around its middle point
+        .each(function(d) {
+            const lines = splitText(d.getLabel(), 30); 
+            const line_count = lines.length;
+            const line_height = 1.2;  // Line height in ems
+            const initial_offset = -(line_height / 2) * (line_count - 1) + "em";  // Vertical shift to center the block
+            
+            const tspans = d3.select(this).selectAll('tspan')
+                .data(lines)
+                .enter()
+                .append('tspan')
+                .attr("x", 0) 
+                .attr("dy", (d, i) => i === 0 ? initial_offset : `${line_height}em`)  // Adjust vertical position
+                .text(d => d);
+        })
         .style("font-size", "12px")
         .style("font-family", "Arial, sans-serif");
+
+
+    function splitText(text, maxLength) {
+        let words = text.split(/\s+/);
+        let lines = [];
+        let currentLine = words[0];
     
+        for (let i = 1; i < words.length; i++) {
+            let word = words[i];
+            if (currentLine.length + word.length + 1 <= maxLength) {
+                currentLine += " " + word;
+            } else {
+                lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+        lines.push(currentLine);
+
+        return lines; // Returns an array of lines
+    }
+
     // To add hover over display of node details
-    node.append("title")
-        .text(d => d.getDetails());
-        
+    // node.append("title")
+    //     .text(d => d.getDetails());
+    
+    
     simulation
         .nodes(d3nodes)
         .on("tick", ticked);
@@ -277,10 +331,23 @@ function generateSvgGraph(graph) {
 
     function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
-        event.subject.fixed = true;
+        d.subject.fixed = true;
+        
         d.fx = null;
         d.fy = null;
     }
+
+    window.addEventListener("resize", function() {
+    // Code to handle resizing or rerendering of SVG
+        var width = document.documentElement.clientWidth;  
+        var height = document.documentElement.clientHeight * 0.9; 
+        svg.attr('viewBox', `0 0 ${width} ${height}`);
+    });
+
+    function updateSidebar(content) {
+        document.getElementById('sidebar-content').innerHTML = content;
+    }
+
 }
 
 
