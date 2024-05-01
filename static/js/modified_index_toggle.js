@@ -188,7 +188,6 @@ filterPapers.addEventListener('click', () => {
     let linklabels = svg.select("g").select(".link-labels");
     if (showPapers) {
         nodes.selectAll("#node-paper").attr("visibility", "visible");
-        // nodes.selectAll("#node-paper").selectAll("circle").attr("pointer-events", "all");
         nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle", true);
         nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle-hidden", false);
         links.selectAll(".paperpaper").attr("visibility", "visible");
@@ -199,7 +198,6 @@ filterPapers.addEventListener('click', () => {
         linklabels.selectAll(".topicpaper").attr("visibility", "visible");
     } else {
         nodes.selectAll("#node-paper").attr("visibility", "hidden");
-        // nodes.selectAll("#node-paper").selectAll("circle").attr("pointer-events", "none");
         nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle", false);
         nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle-hidden", true);
         links.selectAll(".paperpaper").attr("visibility", "hidden");
@@ -218,6 +216,8 @@ filterTopics.addEventListener('click', () => {
     let linklabels = svg.select("g").select(".link-labels");
     if (showTopics) {
         nodes.selectAll("#node-topic").attr("visibility", "visible");
+        nodes.selectAll("#node-topic").selectAll("circle").classed("node-circle", true);
+        nodes.selectAll("#node-topic").selectAll("circle").classed("node-circle-hidden", false);
         links.selectAll(".topictopic").attr("visibility", "visible");
         links.selectAll(".papertopic").attr("visibility", "visible");
         links.selectAll(".topicpaper").attr("visibility", "visible");
@@ -226,6 +226,8 @@ filterTopics.addEventListener('click', () => {
         linklabels.selectAll(".topicpaper").attr("visibility", "visible");
     } else {
         nodes.selectAll("#node-topic").attr("visibility", "hidden");
+        nodes.selectAll("#node-topic").selectAll("circle").classed("node-circle", false);
+        nodes.selectAll("#node-topic").selectAll("circle").classed("node-circle-hidden", true);
         links.selectAll(".topictopic").attr("visibility", "hidden");
         links.selectAll(".papertopic").attr("visibility", "hidden");
         links.selectAll(".topicpaper").attr("visibility", "hidden");
