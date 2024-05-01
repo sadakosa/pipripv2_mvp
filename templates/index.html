@@ -51,10 +51,25 @@
                 <button id="clear_button" class="button">Clear Graph</button>
                 <script type="text/javascript" src="static/js/clear_button.js"></script>
 
-                <label class="toggle">
-                    <input type="checkbox" id="levelToggle">
-                    <div class="slider round"></div>
+        <label class="toggle">
+            <input type="checkbox" id="levelToggle">
+            <div class="slider round"></div>
+        </label>
+
+        <div id="filterList" class="filterList">
+            <div class="filterListItem">
+                <label class="filterToggle">
+                    <input type="checkbox" id="filterPapers" checked>
+                    <span class="filterSlider"></span>
                 </label>
+                Papers
+            </div>
+            <div class="filterListItem">
+                <label class="filterToggle">
+                    <input type="checkbox" id="filterTopics" checked>
+                    <span class="filterSlider"></span>
+                </label>
+                Topics
             </div>
         </div>
     </div>
