@@ -42,12 +42,13 @@ pre {
 /* hover over */
 
 .highlight-node {
-    fill: orange; /* Change fill color when node is highlighted */
+    /* fill: orange;  */
+    opacity: 1; 
 }
 
 .highlight-link {
-    stroke: red; /* Change stroke color when link is highlighted */
-    stroke-width: 3px; /* Make link stroke wider when highlighted */
+    stroke: black; /* Change stroke color when link is highlighted */
+    stroke-width: 2px; /* Make link stroke wider when highlighted */
 }
 
 .faded {

@@ -91,13 +91,18 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     // Append text labels to each link
     var linkLabel = g.append("g")
-        .attr("class", "link-labels")
         .selectAll("text")
         .data(d3links)
-        .enter().append("text")
-        .attr("text-anchor", "middle") // Ensure labels are centered along the link
-        .attr("font-size", "10px")
-        .text(d => d.getLabel()); 
+        .enter()
+        .append("text")
+            .attr("text-anchor", "middle") // Ensure labels are centered along the link
+            .attr("font-size", "10px")
+            .attr("class", "link-labels")
+            // .attr("id", d => `link-label-${d.getLabel().replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
+            .attr("id", d => `link-label-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
+            .text(d => d.getLabel());
+
+
     
     var node = g.append("g")
         .attr("class", "node")
@@ -339,7 +344,10 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 d3.select(`#link-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`)
                 .classed("highlight-link", true)
                 .classed("faded", false);
-                              
+
+                // Highlight the link label
+                d3.select(`#link-label-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`).classed("faded", false);
+
                 // Highlight the connected nodes
                 var sourceNode = d3.select(`#node-${link.source.id.replace(/\s+/g, '-')}`);
                 var targetNode = d3.select(`#node-${link.target.id.replace(/\s+/g, '-')}`);
