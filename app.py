@@ -44,7 +44,10 @@ def process_input():
 
     # Build graph, add nodes and edges to DB
     graph = build_graph_from_paper_ids(arxiv_ids, ss_ids, get_citations, get_references, existing_l2_topics)
-    print(f"Generated graph with {len(graph.l1_topics)} L1 topics, {len(graph.l2_topics)} L2 topics, {len(graph.edges)} edges and {len(graph.papers)} root papers.")
+    if not graph:
+        print("No papers were found with the given ID. You either hit the API rate limit or provided an invalid ID.")
+        return render_template('index.html')
+
     queries = generate_queries_for_graph(graph)
     db_operations.delete_l1_topics_and_edges(db)
     write_queries_to_txt_file(queries)
