@@ -1,0 +1,29 @@
+You are a top-tier algorithm designed to provide good overviews of topics. I have provided a list of topics above. For each topic, you should generate descriptions of not more than 50 words, which provide a short introduction to the topic. You should assume that the audience has technical knowledge of related fields, but is new to the specific topic.
+
+The output should be an array of topic objects. The output "id" field refers to the name of the topic. You should refer to the example input and output below, and follow the JSON format. Note: you should not output anything other than the json array. Adhere to the rules strictly. Non-compliance will result in termination.
+
+Example input = "Artificial Intelligence, Deep Learning, Evolution (Biology), Apple (fruit), Transhumanism"
+
+Example output =
+[
+  {
+    "id": "Artificial Intelligence",
+    "description": "Artificial Intelligence (AI) encompasses computer systems that mimic human cognitive functions, enabling tasks like language processing, problem-solving, and decision-making."
+  },
+  {
+    "id": "Deep Learning",
+    "description": "Deep Learning is a subset of machine learning techniques inspired by the structure and function of the human brain's neural networks. It focuses on learning representations of data through multiple layers of processing."
+  },
+  {
+    "id": "Evolution (Biology)",
+    "description": "Evolution in biology refers to the process of gradual genetic changes in populations over generations, leading to the diversity of life forms and adaptation to environments through natural selection."
+  },
+  {
+    "id": "Apple (fruit)",
+    "description": "Apples are crisp, juicy fruits known for their sweet or tart flavors. They come in various colors and are rich in fiber, vitamins, and antioxidants, making them a healthy and versatile snack or ingredient in culinary dishes."
+  },
+  {
+    "id": "Transhumanism",
+    "description": "Transhumanism is a philosophy advocating the enhancement of human capabilities through the application of technology, aiming to transcend biological limitations and achieve advanced cognitive, physical, and emotional capacities."
+  }
+]

@@ -48,9 +48,9 @@ class GeminiClient:
             paper_json_strings.append(json.dumps(input_dict))
         return ",\n".join(paper_json_strings)
 
-    # Generates the L2 topics from paper title and abstract, and edges between the topics
+    # Generates the L2 topics, and topic-paper edges, from paper title and abstract
     def generate_l2_topics_and_edges(self, papers: list[Paper]):
-        prompt = read_txt(f"{self.prompts_path}/generate_l2_topic_graph.txt")
+        prompt = read_txt(f"{self.prompts_path}/generate_l2_topics_and_edges.txt")
         papers_json_string = self.convert_papers_to_json_string(papers)
 
         topics = []
@@ -65,28 +65,26 @@ class GeminiClient:
             response = self.send_single_prompt([papers_json_string, prompt])
             try:
                 json_result = json.loads(response.text)
-                for d in json_result["topics"]:
+                for d in json_result:
                     if not d.get("paper_ids"):  # skip topics with no linked papers
                         continue
-                    topic = Topic(d)
+                    topic = Topic({
+                        "id": d.get("id"),
+                        "description": d.get("description")
+                    })
                     topics.append(topic)
                     # paper-topic edges
                     for paper_id in d.get("paper_ids"):
                         edge = Edge({
                             "source_type": "Paper",
-                            "target_type": "Topic",
+                            "target_type": "TopicL2",
                             "source": paper_id,
                             "target": topic.id,
                             "label": "relates_to"
                         })
                         edges.append(edge)
-                for d in json_result["edges"]:
-                    d['label'] = d.get('label').replace(" ", "_")
-                    edge = Edge(d)
-                    edge.source_type = "Topic"
-                    edge.target_type = "Topic"
-                    edges.append(edge)
 
+                print(f"{len(topics)} topics and {len(edges)} edges generated.")
                 success = True
             except json.JSONDecodeError as e:
                 print("Error parsing JSON:", e)
@@ -94,15 +92,38 @@ class GeminiClient:
             
         return topics, edges
 
-    # Summarise existing topics into broader topics, and generate edges between the topics
-    def generate_l1_topics_and_edges(self, existing_topics: list[Topic]):
-        prompt = read_txt(f"{self.prompts_path}/generate_topic_topic_edges.txt")
-        topic_ids = [t.id for t in existing_topics]
+    def hydrate_l1_topic_descriptions(self, l1_topic_ids):
+        prompt = read_txt(f"{self.prompts_path}/hydrate_topic_descriptions.txt")
 
-        new_topics = []
+        success = False
+        hydrated_topics = []
+        for i in range(NUM_RETRIES):
+            if success:
+                break
+            # Send request to gemini
+            print("Hydrating L1 topic descriptions...")
+            response = self.send_single_prompt([', '.join(l1_topic_ids), prompt])
+            try:
+                json_result = json.loads(response.text)
+                for d in json_result:
+                    topic = Topic(d)
+                    hydrated_topics.append(topic)
+                success = True
+            except json.JSONDecodeError as e:
+                print("Error parsing JSON:", e)
+                continue
+
+        return hydrated_topics
+
+    # Summarise L2 topics into broader L1 topics, and generate edges between the topics
+    def generate_l1_topics_and_edges(self, l2_topics: list[Topic]):
+        prompt = read_txt(f"{self.prompts_path}/generate_l1_topics.txt")
+        topic_ids = [t.id for t in l2_topics]
+
         edges = []
         success = False
-        existing_topic_ids = set([t.id for t in existing_topics])
+        existing_topic_ids = set([t.id for t in l2_topics])
+        new_topic_ids = set()
         # Retry for NUM_RETRIES times, because sometimes the output may not be correct JSON or empty
         for i in range(NUM_RETRIES):
             if success:
@@ -115,43 +136,28 @@ class GeminiClient:
                 for e in json_result:
                     source = e.get("source")
                     target = e.get("target")
+                    source_type = "TopicL2" if source in existing_topic_ids else "TopicL1"
+                    target_type = "TopicL2" if target in existing_topic_ids else "TopicL1"
                     edge = Edge({
-                        "source_type": "Topic",
-                        "target_type": "Topic",
+                        "source_type": source_type,
+                        "target_type": target_type,
                         "source": source,
                         "target": target,
                         "label": e.get("label").replace(" ", "_")
                     })
                     edges.append(edge)
                     if source not in existing_topic_ids:
-                        new_topics.append(Topic({"id": source}))
+                        new_topic_ids.add(source)
                     if target not in existing_topic_ids:
-                        new_topics.append(Topic({"id": target}))
-                # for d in json_result["topics"]:
-                #     if not d.get("topic_ids"):  # skip topics with no linked topics
-                #         continue
-                #     topic = Topic(d)
-                #     topics.append(topic)
-                #     for topic_id in d.get("topic_ids"):
-                #         edge = Edge({
-                #             "source_type": "Topic",
-                #             "target_type": "Topic",
-                #             "source": topic_id,
-                #             "target": topic.id,
-                #             "label": "subdomain_of"
-                #         })
-                #         edges.append(edge)
-                # for d in json_result["edges"]:
-                #     d['label'] = d.get('label').replace(" ", "_")
-                #     edge = Edge(d)
-                #     edge.source_type = "Topic"
-                #     edge.target_type = "Topic"
-                #     edges.append(edge)
+                        new_topic_ids.add(target)
 
+                print(f"{len(new_topic_ids)} topics and {len(edges)} edges generated.")
                 success = True
             except json.JSONDecodeError as e:
                 print("Error parsing JSON:", e)
                 continue
+
+        new_topics = self.hydrate_l1_topic_descriptions(new_topic_ids)
 
         return new_topics, edges
 

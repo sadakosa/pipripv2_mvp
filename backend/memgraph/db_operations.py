@@ -73,6 +73,22 @@ def get_topics(db):
     return topics
 
 
+def get_l2_topics(db):
+    command = "MATCH (n:TopicL2) RETURN n;"
+    topics_data = db.execute_and_fetch(command)
+
+    topics = []
+    for d in topics_data:
+        n = d['n']
+        topic_dict = {
+            "id": n.properties['id'],
+            "description": n.properties['description']
+        }
+        topic = Topic(topic_dict)
+        topics.append(topic)
+    return topics
+
+
 def get_topic_topic_edges(db):
     command = "MATCH (n1: Topic)-[r]-(n2: Topic) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
     edges = db.execute_and_fetch(command)
@@ -88,8 +104,8 @@ def get_topic_topic_edges(db):
     return node_objects
 
 
-def delete_topic_topic_edges(db):
-    command = "MATCH (n1: Topic)-[r]-(n2: Topic) DELETE r;"
+def delete_l1_topics_and_edges(db):
+    command = "MATCH (t:TopicL1) DETACH DELETE t;"
     db.execute_query(command)
 
 

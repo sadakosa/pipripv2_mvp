@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify, make_response, request
 from backend.graph_manager import build_graph_from_paper_ids
 from backend.memgraph.database.memgraph import Memgraph
 from backend.memgraph import db_operations
-from backend.memgraph.query_generator import generate_queries_for_graph
+from backend.memgraph.query_generator import generate_queries_for_graph, write_queries_to_txt_file
 import re
 
 app = Flask(__name__)
@@ -20,8 +20,6 @@ def index():
 @app.route('/clear_db', methods=['POST'])
 def clear_db():
     db_operations.clear(db)
-    # print(db_operations.get_topic_topic_edges(db), 1)
-    # db_operations.delete_topic_topic_edges(db)
     return render_template('index.html')
 
 @app.route('/process_input', methods=['POST'])
@@ -38,14 +36,18 @@ def process_input():
         arxiv_ids.append(paper_id)
     elif len(paper_id) == 40 and paper_id.islower() and paper_id.isalnum():
         ss_ids.append(paper_id)
+    else:
+        return render_template('index.html')
 
-    # Retrieve existing topics to regenerate the topic-topic edges
-    existing_topics = db_operations.get_topics(db)
+    # Retrieve existing L2 topics (preserved across updates)
+    existing_l2_topics = db_operations.get_l2_topics(db)
 
     # Build graph, add nodes and edges to DB
-    graph = build_graph_from_paper_ids(arxiv_ids, ss_ids, get_citations, get_references, existing_topics)
+    graph = build_graph_from_paper_ids(arxiv_ids, ss_ids, get_citations, get_references, existing_l2_topics)
+    print(f"Generated graph with {len(graph.l1_topics)} L1 topics, {len(graph.l2_topics)} L2 topics, {len(graph.edges)} edges and {len(graph.papers)} root papers.")
     queries = generate_queries_for_graph(graph)
-    db_operations.delete_topic_topic_edges(db)
+    db_operations.delete_l1_topics_and_edges(db)
+    write_queries_to_txt_file(queries)
     for q in queries:
         db.execute_query(q)
 
