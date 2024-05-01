@@ -7,8 +7,15 @@ body {
     stroke-width: 2;
 }
 
-.node circle {
+.node-circle {
     pointer-events: all;
+    stroke: none;
+    stroke-width: 40px;
+}
+
+.node-circle-hidden {
+    pointer-events: none;
+    visibility: hidden;
     stroke: none;
     stroke-width: 40px;
 }

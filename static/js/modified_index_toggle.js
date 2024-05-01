@@ -188,6 +188,9 @@ filterPapers.addEventListener('click', () => {
     let linklabels = svg.select("g").select(".link-labels");
     if (showPapers) {
         nodes.selectAll("#node-paper").attr("visibility", "visible");
+        // nodes.selectAll("#node-paper").selectAll("circle").attr("pointer-events", "all");
+        nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle", true);
+        nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle-hidden", false);
         links.selectAll(".paperpaper").attr("visibility", "visible");
         links.selectAll(".papertopic").attr("visibility", "visible");
         links.selectAll(".topicpaper").attr("visibility", "visible");
@@ -196,6 +199,9 @@ filterPapers.addEventListener('click', () => {
         linklabels.selectAll(".topicpaper").attr("visibility", "visible");
     } else {
         nodes.selectAll("#node-paper").attr("visibility", "hidden");
+        // nodes.selectAll("#node-paper").selectAll("circle").attr("pointer-events", "none");
+        nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle", false);
+        nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle-hidden", true);
         links.selectAll(".paperpaper").attr("visibility", "hidden");
         links.selectAll(".papertopic").attr("visibility", "hidden");
         links.selectAll(".topicpaper").attr("visibility", "hidden");
@@ -317,6 +323,7 @@ function generateSvgGraph(graph) {
     
     // Append circle to each node group
     node.append("circle")
+        .attr("class", "node-circle")
         .attr("id", d => `node-${d.id.replace(/\s+/g, '-')}`) // Add ID to each node for hover over features
         .attr("r", 50)
         .attr("fill", d => {
