@@ -340,7 +340,7 @@ function generateSvgGraph(graph) {
         .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
-                return `#FFF0F5`;
+                return `#80f2db`;
             } else if (d.type === "paper") {
                 return `gray`;
             }
