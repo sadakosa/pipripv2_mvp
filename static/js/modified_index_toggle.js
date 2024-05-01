@@ -3,6 +3,7 @@ import { D3TopicNode, D3PaperNode, D3Link, D3Graph } from './d3_models.js';
 const toggle = document.querySelector('#levelToggle');
 const filterPapers = document.querySelector('#filterPapers');
 const filterTopics = document.querySelector('#filterTopics');
+const filterCited = document.querySelector('#filterCited');
 
 
 // SVG set up
@@ -28,6 +29,7 @@ var l1Graph;
 var isLevel2 = true;
 var showPapers = true;
 var showTopics = true;
+var showCitedBy = true;
 
 getL2Graph()
 .then(
@@ -238,6 +240,18 @@ filterTopics.addEventListener('click', () => {
     }
 });
 
+filterCited.addEventListener('click', () => {
+    showCitedBy = !showCitedBy
+    let links = svg.select("g").select(".links");
+    let linklabels = svg.select("g").select(".link-labels");
+    if (showCitedBy) {
+        links.selectAll(".cited_by").attr("visibility", "visible");
+        linklabels.selectAll(".cited_by").attr("visibility", "visible");
+    } else {
+        links.selectAll(".cited_by").attr("visibility", "hidden");
+        linklabels.selectAll(".cited_by").attr("visibility", "hidden");
+    }
+});
 
 
 function isPaper(id) {
@@ -287,11 +301,11 @@ function generateSvgGraph(graph) {
                 if (typeof d.source === 'string') {
                     var sourceType = isPaper(d.source) ? "paper" : "topic";
                     var targetType = isPaper(d.target) ? "paper" : "topic";
-                    return "normal-lines " + sourceType + targetType;
+                    return "normal-lines " + sourceType + targetType + " " + d.getLabel();
                 } else {
-                    return "normal-lines " + d.source.type + d.target.type;
+                    return "normal-lines " + d.source.type + d.target.type + " " + d.getLabel();
                 }
-            }) 
+            }) // we use this to mark which edges are paper-paper, paper-topic, or topic-topic edges & the relationship type
             .attr("marker-end", "url(#arrow)");  // Use the arrow marker
 
     // Append text labels to each link
@@ -316,9 +330,9 @@ function generateSvgGraph(graph) {
                 if (typeof d.source === 'string') {
                     var sourceType = isPaper(d.source) ? "paper" : "topic";
                     var targetType = isPaper(d.target) ? "paper" : "topic";
-                    return "link-labels " + sourceType + targetType;
+                    return "link-labels " + sourceType + targetType + " " + d.getLabel();
                 } else {
-                    return "link-labels " + d.source.type + d.target.type;
+                    return "link-labels " + d.source.type + d.target.type + " " + d.getLabel();
                 }
             }); 
         
