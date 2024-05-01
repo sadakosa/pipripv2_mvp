@@ -24,7 +24,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             d3nodes.push(new D3PaperNode(
                 node.id,
 //                node.arxiv_id,
-//                node.url,
+                node.url,
 //                node.citation_count,
                 node.title,
                 node.authors,
@@ -131,10 +131,15 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             if (D3NodeObject.type === "topic") {
                 updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.id}` + "<br> <b>Description:</b> " + D3NodeObject.description);
             } else if (D3NodeObject.type === "paper") {
-                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
+                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b><a href=${D3NodeObject.url} target="_blank">Link</a></b><br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
             }
         })
-        .on("mouseout", resetHighlights);
+        .on("mouseout", resetHighlights)
+        .on("click", function(D3NodeObject) {
+            if (D3NodeObject.url) {
+                window.open(D3NodeObject.url, '_blank');
+            }
+        });
     
     // Append text to each node group
     node.append("text")
