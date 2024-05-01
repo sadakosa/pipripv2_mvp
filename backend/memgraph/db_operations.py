@@ -157,7 +157,7 @@ def paper_or_topic(node):
 
 
 def get_graph(db):
-    command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
+    command = "MATCH (n1)-[r]->(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
     relationships = db.execute_and_fetch(command)
     print("in get_graph")
 
@@ -203,5 +203,42 @@ def get_graph(db):
             added_nodes.append(n2.id)
 
     data = {"links": link_objects, "nodes": node_objects}
+
+    return json.dumps(data)
+
+
+def get_l1_graph(db):
+    command = "MATCH (n1:TopicL1)-[r]->(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels UNION MATCH (n1)-[r]->(n2:TopicL1) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
+    relationships = db.execute_and_fetch(command)
+    print("in get_graph")
+
+    link_objects = []
+    node_objects = []
+    added_nodes = []
+
+    for relationship in relationships:
+        r = relationship['r']
+        # print(relationship)
+        data = {
+            "source": relationship['n1'].properties['id'],
+            "target": relationship['n2'].properties['id'],
+            "label": relationship['label']
+        }
+        link_objects.append(data)
+
+        n1 = relationship['n1']
+        if not (n1.id in added_nodes):
+            data = paper_or_topic(n1)
+            node_objects.append(data)
+            added_nodes.append(n1.id)
+
+        n2 = relationship['n2']
+        if not (n2.id in added_nodes):
+            data = paper_or_topic(n2)
+            node_objects.append(data)
+            added_nodes.append(n2.id)
+
+    data = {"links": link_objects, "nodes": node_objects}
+    print(data)
 
     return json.dumps(data)

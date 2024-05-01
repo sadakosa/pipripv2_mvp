@@ -42,6 +42,10 @@ def generate_paper_queries(papers: list[Paper]):
 
 def generate_queries_for_graph(g: Graph):
     queries = generate_l1_topic_queries(g.l1_topics) + generate_l2_topic_queries(g.l2_topics) + generate_paper_queries(g.papers) + generate_edge_queries(g.edges)
+    f = open("backend/resources/test.txt", "w+")
+    for query in queries:
+        f.write(query)
+    f.close()
     return queries
 
 

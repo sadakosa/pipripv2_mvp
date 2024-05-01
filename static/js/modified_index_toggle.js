@@ -69,21 +69,22 @@ toggle.addEventListener('click', () => {
             generateSvgGraph(l2Graph);
         }
     } else {
-        // if (!l1Graph) {
-        //     getL1Graph()
-        //     .then(
-        //         (graph) => {
-        //             l1Graph = graph;
-        //             generateSvgGraph(graph);
-        //         },
-        //         error => console.log(error)
-        //     )
-        // } else {
-        //     generateSvgGraph(l2Graph);
-        // }
-        let graph = dummygraph();
-        l1Graph = graph;
-        generateSvgGraph(graph);
+        if (!l1Graph) {
+            getL1Graph()
+            .then(
+                (graph) => {
+                    console.log(graph);
+                    l1Graph = graph;
+                    generateSvgGraph(graph);
+                },
+                error => console.log(error)
+            )
+        } else {
+            generateSvgGraph(l1Graph);
+        }
+        // let graph = dummygraph();
+        // l1Graph = graph;
+        // generateSvgGraph(graph);
     }
 
 });
@@ -147,11 +148,11 @@ async function getL1Graph() {
     let responseJSON = JSON.parse(responseString);
     
     let d3nodes = [];
-    for (node of responseJSON.nodes) {
+    for (let node of responseJSON.nodes) {
         d3nodes.push(new D3TopicNode(node.id, node.description));
     }
     let d3links = [];
-    for (link of responseJSON.links) {
+    for (let link of responseJSON.links) {
         d3links.push(new D3Link(link.source, link.target, link.label));
     }
     console.log(d3nodes);
