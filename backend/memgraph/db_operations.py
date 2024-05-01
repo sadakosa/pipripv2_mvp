@@ -157,7 +157,7 @@ def paper_or_topic(node):
 
 
 def get_graph(db):
-    command = "MATCH (n1)-[r]-(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
+    command = "MATCH (n1)-[r]->(n2) RETURN n1, labels(n1) AS n1_labels, type(r) AS label, r, n2, labels(n2) AS n2_labels;"
     relationships = db.execute_and_fetch(command)
     print("in get_graph")
 
