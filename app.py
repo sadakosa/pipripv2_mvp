@@ -69,7 +69,6 @@ def get_graph():
 @app.route("/get-l1-graph", methods=["POST"])
 def get_l1_graph():
     #TODO: integrate with memgraph
-    db = Memgraph()
     response = make_response(
         jsonify(db_operations.get_l1_graph(db)), 200)
     return response
