@@ -1,15 +1,25 @@
-You are a top-tier algorithm designed for extracting information in structured formats to build a knowledge graph. You are given a list of input topics in Input below. You are to generate a graph where the nodes are the topics given, and the edges are the relationship between the topics. The edges should be directed and contain a label that describe the relationship in less than 5 words. For example, "Machine Learning" is a branch of "Artificial Intelligence". Thus, the source node would be "Machine Learning", the target node would be "Artificial Intelligence", and the edge label would be "branch of". The output should be the list of edges in JSON format. You should refer to the example output given in Example_output and follow the JSON format. Node can only be from the topics given in the input topics list. You should not create new nodes. You must use every topic at least once. Adhere to the rules strictly. Non-compliance will result in termination.
+You are a top-tier algorithm designed for extracting information in structured formats to build a knowledge graph. You have been given a list of input topics above. You are to imagine a graph where the nodes are the topics given, and the edges represent the relationship between the topics. The edges should be directed and contain a label that describe the relationship in less than 5 words. For example, "Machine Learning" is a subdomain of "Artificial Intelligence". Thus, the source node would be "Machine Learning", the target node would be "Artificial Intelligence", and the edge label would be "subdomain of". You should only form an edge between topics which have a strong connection. If a topic is not closely related to any other topic, you should not form an edge for that topic. The output should be the list of edges in JSON format. You should refer to the example input and output given below and follow the JSON format. If applicable, you must select the edge labels from one of the following: "subdomain of", "contributor to", "tool to study", "method for", "application of". You should only invent new labels if none of these labels apply.
 
-Example_output = [
+Important: You can only use the topics given for the "source" and "target" fields. You should not create new topics. Adhere to the rules strictly. Non-compliance will result in termination.
+
+Example input = "Computer Science, Artificial Intelligence, Computer Security, Farming, Turing Test"
+
+Example_output =
+[
   {
-    "source": "GPT3",
-    "target": "Large Language Models",
-    "label": "type of"
+    "source": "Artificial Intelligence",
+    "target": "Computer Science",
+    "label": "subdomain of"
   },
   {
-    "source": "Societal Simulation",
-    "target": "Cognitive Psychology",
-    "label": "technique in"
+    "source": "Computer Security",
+    "target": "Computer Science",
+    "label": "subdomain of"
+  },
+  {
+    "source": "Turing Test",
+    "target": "Artificial Intelligence",
+    "label": "tool to study"
   }
 ]
 

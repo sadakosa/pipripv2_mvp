@@ -49,12 +49,13 @@ pre {
 /* hover over */
 
 .highlight-node {
-    fill: orange; /* Change fill color when node is highlighted */
+    /* fill: orange;  */
+    opacity: 1; 
 }
 
 .highlight-link {
-    stroke: red; /* Change stroke color when link is highlighted */
-    stroke-width: 3px; /* Make link stroke wider when highlighted */
+    stroke: black; /* Change stroke color when link is highlighted */
+    stroke-width: 2px; /* Make link stroke wider when highlighted */
 }
 
 .faded {
@@ -77,9 +78,20 @@ pre {
     overflow-y: auto; /* Enables scroll if content is too long */
 }
 
+svg {
+    /* width: 100%;
+    height: 100%; */
+    max-width: none;  /* Ensures there's no maximum width */
+    max-height: none; /* Ensures there's no maximum height */
+}
+
 .container {
+    display: flex; /* Establishes a flex container */
     flex-grow: 1; /* Takes up remaining space */
     overflow: hidden; /* Prevents overflow issues */
+    flex-direction: column; /* Stacks children vertically */
+    align-items: stretch; /* Stretches children to fit the width of the container */
+    height: 100%; /* Full height */
 }
 
 #input_form {
@@ -93,6 +105,30 @@ pre {
     white-space: nowrap;
 }
 /*--------- END sidebar --------*/
+
+/*--------- interactive elements below svg --------*/
+
+.flex-container {
+    display: flex;
+    width: 100%;
+}
+
+.form-side {
+    flex: 1; /* Takes up half of the space */
+    padding: 20px; /* Padding for aesthetic spacing */
+}
+
+.controls-side {
+    flex: 1; /* Takes up the remaining half */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+    padding: 20px;
+}
+
+/*--------- END interactive elements below svg --------*/
+
 
 
 /* --------- Toggle --------- */
@@ -225,8 +261,51 @@ pre {
     transform: translateX(26px);
   }
 /*--------- END TOGGLE --------*/
-/* 
-.filterListItem {
-    width: 100px
-} */
 
+/*--------- BUTTON --------*/
+
+.button {
+  background-color: #f8f9fa;
+  border: 1px solid #f8f9fa;
+  border-radius: 4px;
+  color: #3c4043;
+  cursor: pointer;
+  font-family: arial,sans-serif;
+  font-size: 14px;
+  height: 36px;
+  line-height: 27px;
+  min-width: 54px;
+  padding: 0 16px;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: pre;
+  margin: 10px 0; /* Spacing between buttons */
+}
+
+.button:hover {
+  border-color: #dadce0;
+  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+  color: #202124;
+}
+
+.button:focus {
+  border-color: #4285f4;
+  outline: none;
+}
+
+/*--------- END BUTTON --------*/
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+
+
+/* --------- Tooltip --------- */
