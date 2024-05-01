@@ -53,6 +53,7 @@ def build_graph_from_paper_ids(arxiv_ids=[], ss_ids=[], get_citations=False, get
             citation_edges.append(edge)
     l2_topics, l2_edges = gem.generate_l2_topics_and_edges(papers + referenced_papers + citing_papers)
     l1_topics, l1_edges = gem.generate_l1_topics_and_edges(l2_topics + existing_l2_topics)
-    graph = Graph(l1_topics=l1_topics, l2_topics=l2_topics, edges=l2_edges + l1_edges + reference_edges + citation_edges, papers=papers)
+    l1_topic_edges = gem.generate_topic_topic_edges(l1_topics)
+    graph = Graph(l1_topics=l1_topics, l2_topics=l2_topics, edges=l2_edges + l1_edges + reference_edges + citation_edges + l1_topic_edges, papers=papers)
 
     return graph

@@ -1,6 +1,6 @@
 You are a top-tier algorithm designed to provide good overviews of topics. I have provided a list of topics above. For each topic, you should generate descriptions of not more than 50 words, which provide a short introduction to the topic. You should assume that the audience has technical knowledge of related fields, but is new to the specific topic.
 
-The output should be an array of topic objects. The output "id" field refers to the name of the topic. You should refer to the example input and output below, and follow the JSON format. Note: you should not output anything other than the json array. Adhere to the rules strictly. Non-compliance will result in termination.
+The output should be an array of topic objects. The output "id" field refers to the name of the topic. You must not generate any output ids which are not from the input. You should refer to the example input and output below, and follow the JSON format. Note: you should not output anything other than the json array. Adhere to the rules strictly. Non-compliance will result in termination.
 
 Example input = "Artificial Intelligence, Deep Learning, Evolution (Biology), Apple (fruit), Transhumanism"
 

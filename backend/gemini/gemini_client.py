@@ -13,23 +13,12 @@ NUM_RETRIES = 5
 
 class GeminiClient:
     def __init__(self):
-        # load the prompts
         self.prompts_path = 'backend/gemini/prompts'
-        # self.starter_sys_prompt = read_txt(f"{self.prompts_path}/starter.txt")
 
-        # load the api key
         config = load_yaml_config('backend/gemini/config/api_key.yaml')
         api_key = config['GEMINI_API_KEY']
         genai.configure(api_key=api_key)
         self.client = genai.GenerativeModel('gemini-pro')
-
-    # to deal with the fact that there is no system prompt in the gemini api, we will just use the starting user prompt as the system prompt
-    # link: https://www.reddit.com/r/Bard/comments/1b90i8o/does_gemini_have_a_system_prompt_option_while/
-    # link: https://www.googlecloudcommunity.com/gc/AI-ML/Gemini-Pro-Context-Option/m-p/684704/highlight/true#M4159
-    # def send_starter_system_prompt(self):
-    #     response = self.client.generate_content(self.starter_sys_prompt)
-    #     print(response.text)
-    #     return response
 
     def send_single_prompt(self, prompt):
         response = self.client.generate_content(prompt)
@@ -106,8 +95,9 @@ class GeminiClient:
             try:
                 json_result = json.loads(response.text)
                 for d in json_result:
-                    topic = Topic(d)
-                    hydrated_topics.append(topic)
+                    if d.get("id", "") in l1_topic_ids:
+                        topic = Topic(d)
+                        hydrated_topics.append(topic)
                 success = True
             except json.JSONDecodeError as e:
                 print("Error parsing JSON:", e)
@@ -161,14 +151,46 @@ class GeminiClient:
 
         return new_topics, edges
 
+    # Generate new edges between topics. Currently only used for L1 topics.
+    def generate_topic_topic_edges(self, topics):
+        prompt = read_txt(f"{self.prompts_path}/generate_topic_edges.txt")
+        topic_ids = [t.id for t in topics]
+
+        edges = []
+        success = False
+        for i in range(NUM_RETRIES):
+            if success:
+                break
+            # Send request to gemini
+            print("Generating topic-topic edges...")
+            response = self.send_single_prompt([', '.join(topic_ids), prompt])
+            try:
+                json_result = json.loads(response.text)
+                for e in json_result:
+                    edge = Edge({
+                        "source_type": "TopicL1",
+                        "target_type": "TopicL1",
+                        "source": e.get("source"),
+                        "target": e.get("target"),
+                        "label": e.get("label").replace(" ", "_")
+                    })
+                    edges.append(edge)
+
+                print(f"{len(edges)} L1 topic-topic edges generated.")
+                success = True
+            except json.JSONDecodeError as e:
+                print("Error parsing JSON:", e)
+                continue
+
+        return edges
+
     # === testing ===
     # For testing L2 topics generation 
     def test_generate_topics_from_abstracts(self):
         generate_topics_prompt = read_txt(f"{self.prompts_path}/generate_topics.txt")
-        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")  # TODO: replace with actual DB query
+        test_abstracts = read_txt(f"{self.prompts_path}/sample_abstracts.txt")
         response = self.send_single_prompt([test_abstracts, generate_topics_prompt])
         topics = []
-        edges = []  # TODO: populate edges
         try:
             json_array = json.loads(response.text)
             for d in json_array:
@@ -181,10 +203,9 @@ class GeminiClient:
     # Summarise L2 topics into L1 topics
     def summarize_topics(self):
         summarize_topics_prompt = read_txt(f"{self.prompts_path}/summarize_topics.txt")
-        test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"  # TODO: replace with actual DB query
+        test_topics = "Regenerative Medicine, Social Graph Visualization, Covid-19, Stem Cells, Capitalism"
         response = self.send_single_prompt([test_topics, summarize_topics_prompt])
         topics = []
-        edges = []  # TODO: populate edges
         try:
             json_array = json.loads(response.text)
             for d in json_array:
