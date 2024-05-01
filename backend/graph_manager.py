@@ -23,6 +23,8 @@ def build_graph_from_paper_ids(arxiv_ids=[], ss_ids=[], get_citations=False, get
             paper = Paper.from_arxiv(r)
             papers.append(paper)
         print(f"Rate limited, collected {len(papers)} papers from Arxiv API instead.")
+    if not papers:
+        return None  # None of the APIs returned anything
 
     gem = GeminiClient()
     referenced_papers = []
@@ -55,5 +57,6 @@ def build_graph_from_paper_ids(arxiv_ids=[], ss_ids=[], get_citations=False, get
     l1_topics, l1_edges = gem.generate_l1_topics_and_edges(l2_topics + existing_l2_topics)
     l1_topic_edges = gem.generate_topic_topic_edges(l1_topics)
     graph = Graph(l1_topics=l1_topics, l2_topics=l2_topics, edges=l2_edges + l1_edges + reference_edges + citation_edges + l1_topic_edges, papers=papers)
+    print(f"Generated graph with {len(graph.l1_topics)} L1 topics, {len(graph.l2_topics)} L2 topics, {len(graph.edges)} edges and {len(graph.papers)} root papers.")
 
     return graph
