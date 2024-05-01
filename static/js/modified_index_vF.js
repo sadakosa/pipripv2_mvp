@@ -27,7 +27,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 node.url,
 //                node.citation_count,
                 node.title,
-                node.authors,
+                node.authors.join(', '),
                 node.abstract
 //                node.publication_date,
 //                node.references
