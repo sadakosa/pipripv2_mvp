@@ -111,7 +111,7 @@ async function getL2Graph() {
             d3nodes.push(new D3PaperNode(
                 resnode.id,
 //                resnode.arxiv_id,
-//                resnode.url,
+               resnode.url,
 //                resnode.citation_count,
                 resnode.title,
                 resnode.authors,
@@ -302,14 +302,23 @@ function generateSvgGraph(graph) {
         .enter().append("text")
             .attr("text-anchor", "middle") // Ensure labels are centered along the link
             .attr("font-size", "10px")
+            // .attr("class", "link-labels")
+            // .attr("id", d => `link-label-${d.getLabel().replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
+            // .attr("id", d => `link-label-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
+            .attr("id", d => {
+                if (typeof d.source === 'string') {
+                    return `link-label-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`
+                }
+                return `link-label-${d.source.id.replace(/\s+/g, '-')}-${d.target.id.replace(/\s+/g, '-')}`
+            }) // Add ID to each link for hover over features
             .text(d => d.getLabel())
             .attr("class", d => {
                 if (typeof d.source === 'string') {
                     var sourceType = isPaper(d.source) ? "paper" : "topic";
                     var targetType = isPaper(d.target) ? "paper" : "topic";
-                    return sourceType + targetType;
+                    return "link-labels " + sourceType + targetType;
                 } else {
-                    return d.source.type + d.target.type;
+                    return "link-labels " + d.source.type + d.target.type;
                 }
             }); 
         
@@ -337,15 +346,20 @@ function generateSvgGraph(graph) {
             }
         })
         .on("mouseover", function(D3NodeObject) {
-            // console.log("d: ", D3NodeObject);
+            console.log("d: ", D3NodeObject);
             highlightNode.call(this, D3NodeObject);
             if (D3NodeObject.type === "topic") {
                 updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.id}` + "<br> <b>Description:</b> " + D3NodeObject.description);
             } else if (D3NodeObject.type === "paper") {
-                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
+                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b><a href=${D3NodeObject.url} target="_blank">Link</a></b><br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
             }
         })
-        .on("mouseout", resetHighlights);
+        .on("mouseout", resetHighlights)
+        .on("click", function(D3NodeObject) {
+            if (D3NodeObject.url) {
+                window.open(D3NodeObject.url, '_blank');
+            }
+        });
     
     // Append text to each node group
     node.append("text")
@@ -446,7 +460,6 @@ function generateSvgGraph(graph) {
 
     function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
-        console.log(d);
         d.subject.fixed = true;
         
         d.fx = null;
@@ -492,7 +505,10 @@ function generateSvgGraph(graph) {
                 d3.select(`#link-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`)
                 .classed("highlight-link", true)
                 .classed("faded", false);
-                              
+
+                // Highlight the link label
+                d3.select(`#link-label-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`).classed("faded", false);
+
                 // Highlight the connected nodes
                 var sourceNode = d3.select(`#node-${link.source.id.replace(/\s+/g, '-')}`);
                 var targetNode = d3.select(`#node-${link.target.id.replace(/\s+/g, '-')}`);
@@ -503,15 +519,7 @@ function generateSvgGraph(graph) {
             }
         })
         
-        // console.log("count: ", count);
-    }
-
-    function returnMatch(link, d) {
-        if (link.source === d || link.target === d) {
-            return [link.source.id, d.id];
-        } else {
-            return "no match";
-        }
+        console.log("count: ", count);
     }
 
     // Function to reset highlights
