@@ -6,10 +6,18 @@ from backend.paper import Paper
 from backend.topic import Topic
 
 
-def generate_topic_queries(topics: list[Topic]):
+def generate_l1_topic_queries(topics: list[Topic]):
     queries = []
     for topic in topics:
-        q = f"CREATE (n:Topic {{ id: '{cleanse(topic.id)}', description: '{cleanse(topic.description)}'}});\n"
+        q = f"CREATE (n:TopicL1 {{ id: '{cleanse(topic.id)}', description: '{cleanse(topic.description)}'}});\n"
+        queries.append(q)
+    return queries
+
+
+def generate_l2_topic_queries(topics: list[Topic]):
+    queries = []
+    for topic in topics:
+        q = f"CREATE (n:TopicL2 {{ id: '{cleanse(topic.id)}', description: '{cleanse(topic.description)}'}});\n"
         queries.append(q)
     return queries
 
@@ -33,7 +41,7 @@ def generate_paper_queries(papers: list[Paper]):
 
 
 def generate_queries_for_graph(g: Graph):
-    queries = generate_topic_queries(g.topics) + generate_paper_queries(g.papers) + generate_edge_queries(g.edges)
+    queries = generate_l1_topic_queries(g.l1_topics) + generate_l2_topic_queries(g.l2_topics) + generate_paper_queries(g.papers) + generate_edge_queries(g.edges)
     return queries
 
 

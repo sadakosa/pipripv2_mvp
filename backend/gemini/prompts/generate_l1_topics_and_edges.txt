@@ -1,0 +1,39 @@
+You are a top-tier algorithm designed for extracting information in structured formats to build a knowledge graph. I have provided a list of topics from academic papers. You are to generate a graph where the nodes are the topics provided and any newly generated topics, and the edges are the relationships between the topics. The edges should be directed and contain a source node and target node. They should also contain a label that describe the relationship in less than 5 words. For example, "Machine Learning" is a branch of "Artificial Intelligence". Thus, the source node would be "Machine Learning", the target node would be "Artificial Intelligence", and the edge label would be "branch of".
+
+You should also generate some new broader topics of between 1-3 words which connect the existing topics (e.g. "Physics" is a broader topic encompassing "Quantum Entanglement" and "Albert Einstein"). Given n provided topics, you must generate no more than n/2 new broad topics. The broad topics should be general, but include disambiguation when necessary. For instance, (biology) in "Evolution (Biology)" can be used to disambiguate between Evolution used in a biological context versus other contexts like psychology or computing. Make the topics as distinct as possible from one another. Edges can exist to connect newly generated topics as well (e.g. "Deep Learning" and "Physics" are connected by "tool to study"). Note: Do NOT include the example topics in the output if they are not relevant. They are only for illustration purposes.
+
+If applicable, you must select the edge labels from one of the following: "subdomain of", "contributor to", "tool to study", "method for", "application of", "affects". You should only invent new labels if none of these labels apply. Edges must be generated only if there is a strong connection between the topics.
+
+The output should be a JSON array of edge objects. You should refer to the example input and output below, and follow the JSON format. You should not output anything other than the JSON array. Every topic must have at least one edge. There can be at most one edge between every unique pair of topics. Refer to the following example. Adhere to the rules strictly. Non-compliance will result in termination.
+
+Example input = "Large Language Models, Quantum Entanglement, Generative Adversarial Networks, Albert Einstein"
+
+Example output =
+[
+  {
+    "source": "Generative Adversarial Networks",
+    "target": "Deep Learning",
+    "label": "subdomain of"
+  },
+  {
+    "source": "Large Language Models",
+    "target": "Deep Learning",
+    "label": "subdomain of"
+  },
+  {
+    "source": "Quantum Entanglement",
+    "target": "Physics",
+    "label": "subdomain of"
+  },
+  {
+    "source": "Albert Einstein",
+    "target": "Physics",
+    "label": "contributor to"
+  },
+  {
+    "source": "Deep Learning",
+    "target": "Physics",
+    "label": "tool to study"
+  }
+]
+
