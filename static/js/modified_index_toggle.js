@@ -1,7 +1,8 @@
 import { D3TopicNode, D3PaperNode, D3Link, D3Graph } from './d3_models.js';
 
 const toggle = document.querySelector('#levelToggle');
-var isLevel2 = true;
+const filterPapers = document.querySelector('#filterPapers');
+const filterTopics = document.querySelector('#filterTopics');
 
 
 // SVG set up
@@ -24,6 +25,9 @@ var simulation = d3.forceSimulation()
 
 var l2Graph;
 var l1Graph;
+var isLevel2 = true;
+var showPapers = true;
+var showTopics = true;
 
 getL2Graph()
 .then(
@@ -174,6 +178,65 @@ function dummygraph() {
     return new D3Graph(nodes, edges)
 }
 
+// ===============
+// Filters
+// ===============
+filterPapers.addEventListener('click', () => {
+    showPapers = !showPapers
+    let nodes = svg.select("g").select(".node");
+    let links = svg.select("g").select(".links");
+    let linklabels = svg.select("g").select(".link-labels");
+    if (showPapers) {
+        nodes.selectAll("#node-paper").attr("visibility", "visible");
+        links.selectAll(".paperpaper").attr("visibility", "visible");
+        links.selectAll(".papertopic").attr("visibility", "visible");
+        links.selectAll(".topicpaper").attr("visibility", "visible");
+        linklabels.selectAll(".paperpaper").attr("visibility", "visible");
+        linklabels.selectAll(".papertopic").attr("visibility", "visible");
+        linklabels.selectAll(".topicpaper").attr("visibility", "visible");
+    } else {
+        nodes.selectAll("#node-paper").attr("visibility", "hidden");
+        links.selectAll(".paperpaper").attr("visibility", "hidden");
+        links.selectAll(".papertopic").attr("visibility", "hidden");
+        links.selectAll(".topicpaper").attr("visibility", "hidden");
+        linklabels.selectAll(".paperpaper").attr("visibility", "hidden");
+        linklabels.selectAll(".papertopic").attr("visibility", "hidden");
+        linklabels.selectAll(".topicpaper").attr("visibility", "hidden");
+    }
+});
+
+filterTopics.addEventListener('click', () => {
+    showTopics = !showTopics
+    let nodes = svg.select("g").select(".node");
+    let links = svg.select("g").select(".links");
+    let linklabels = svg.select("g").select(".link-labels");
+    if (showTopics) {
+        nodes.selectAll("#node-topic").attr("visibility", "visible");
+        links.selectAll(".topictopic").attr("visibility", "visible");
+        links.selectAll(".papertopic").attr("visibility", "visible");
+        links.selectAll(".topicpaper").attr("visibility", "visible");
+        linklabels.selectAll(".topictopic").attr("visibility", "visible");
+        linklabels.selectAll(".papertopic").attr("visibility", "visible");
+        linklabels.selectAll(".topicpaper").attr("visibility", "visible");
+    } else {
+        nodes.selectAll("#node-topic").attr("visibility", "hidden");
+        links.selectAll(".topictopic").attr("visibility", "hidden");
+        links.selectAll(".papertopic").attr("visibility", "hidden");
+        links.selectAll(".topicpaper").attr("visibility", "hidden");
+        linklabels.selectAll(".topictopic").attr("visibility", "hidden");
+        linklabels.selectAll(".papertopic").attr("visibility", "hidden");
+        linklabels.selectAll(".topicpaper").attr("visibility", "hidden");
+    }
+});
+
+
+
+function isPaper(id) {
+    // hacky way to check if the node is a paper or topic node from the id
+    // to check if the edge is a paper-paper / paper-topic / topic-topic edge
+    return id.length == 40 && /\d/.test(id) && id.indexOf(' ') == -1
+}
+
 function generateSvgGraph(graph) {
     let d3links = graph.edges;
     let d3nodes = graph.nodes;
@@ -211,7 +274,15 @@ function generateSvgGraph(graph) {
                 }
                 return `link-${d.source.id.replace(/\s+/g, '-')}-${d.target.id.replace(/\s+/g, '-')}`
             }) // Add ID to each link for hover over features
-            .attr("class", "normal-lines") 
+            .attr("class", d => {
+                if (typeof d.source === 'string') {
+                    var sourceType = isPaper(d.source) ? "paper" : "topic";
+                    var targetType = isPaper(d.target) ? "paper" : "topic";
+                    return "normal-lines " + sourceType + targetType;
+                } else {
+                    return "normal-lines " + d.source.type + d.target.type;
+                }
+            }) 
             .attr("marker-end", "url(#arrow)");  // Use the arrow marker
 
     // Append text labels to each link
@@ -220,15 +291,25 @@ function generateSvgGraph(graph) {
         .selectAll("text")
         .data(d3links)
         .enter().append("text")
-        .attr("text-anchor", "middle") // Ensure labels are centered along the link
-        .attr("font-size", "10px")
-        .text(d => d.getLabel()); 
-    
+            .attr("text-anchor", "middle") // Ensure labels are centered along the link
+            .attr("font-size", "10px")
+            .text(d => d.getLabel())
+            .attr("class", d => {
+                if (typeof d.source === 'string') {
+                    var sourceType = isPaper(d.source) ? "paper" : "topic";
+                    var targetType = isPaper(d.target) ? "paper" : "topic";
+                    return sourceType + targetType;
+                } else {
+                    return d.source.type + d.target.type;
+                }
+            }); 
+        
     var node = g.append("g")
         .attr("class", "node")
         .selectAll(".nodes")
         .data(d3nodes)
         .enter().append("g")  // Append a 'g' element for each node
+        .attr("id", d => d.type == "topic" ? "node-topic" : "node-paper")
         .call(d3.drag()
             .on("start", dragstarted)
             .on("drag", dragged)
