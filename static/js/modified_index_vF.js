@@ -52,6 +52,22 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
+    // Define the marker for the arrow heads
+    svg.append("defs").selectAll("marker")
+        .data(["end"])      // Different marker types can be defined here
+        .enter().append("marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 70)   // Controls the distance of the marker from the node
+        .attr("refY", 0)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto") 
+        .append("path")
+        .attr("d", "M0,-5L10,0L0,5")
+        .attr("class", "arrowHead")
+        .style("fill", "#999"); // Set the color of the arrow
+
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
         .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
@@ -66,8 +82,13 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         .attr("class", "links")
         .selectAll("line")
         .data(d3links)
-        .enter().append("line");
-        
+        .enter()
+        .append("line")
+            .attr("id", d => `link-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`) // Add ID to each link for hover over features
+            .attr("class", "normal-lines") 
+            .attr("marker-end", "url(#arrow)");  // Use the arrow marker
+
+
     // Append text labels to each link
     var linkLabel = g.append("g")
         .attr("class", "link-labels")
@@ -90,6 +111,7 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
     
     // Append circle to each node group
     node.append("circle")
+        .attr("id", d => `node-${d.id.replace(/\s+/g, '-')}`) // Add ID to each node for hover over features
         .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
@@ -98,23 +120,20 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 return `gray`;
             }
         })
-        .on("mouseover", function(d) {
-            if (d.type === "topic") {
-                updateSidebar(`<b>Hovered on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
-            } else if (d.type === "paper") {
-                updateSidebar(`<b>Hovered on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
+        .on("mouseover", function(D3NodeObject) {
+            console.log("d: ", D3NodeObject);
+            highlightNode.call(this, D3NodeObject);
+            if (D3NodeObject.type === "topic") {
+                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.id}` + "<br> <b>Description:</b> " + D3NodeObject.description);
+            } else if (D3NodeObject.type === "paper") {
+                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
             }
         })
-        .on("click", function(d) {
-            if (d.type === "topic") {
-                updateSidebar(`<b>Clicked on node:</b> ${d.id}` + "<br> <b>Description:</b> " + d.description);
-            } else if (d.type === "paper") {
-                updateSidebar(`<b>Clicked on node:</b> ${d.title}<br> <b>Authors:</b> ${d.authors}<br> <b>Abstract:</b> ${d.abstract}`);
-            }
-        });
+        .on("mouseout", resetHighlights);
     
     // Append text to each node group
     node.append("text")
+        .attr("class", "node-labels")
         .attr("x", 0) // Center text horizontally on the circle's center
         .attr("y", ".35em") // Center text vertically relative to circle
         .attr("text-anchor", "middle") // Align text around its middle point
@@ -290,6 +309,64 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     function updateSidebar(content) {
         document.getElementById('sidebar-content').innerHTML = content;
+    }
+
+    
+    // =============================================================
+    // Function to highlight nodes and links when hovered over
+    // =============================================================
+
+    // Function to highlight nodes and links
+    function highlightNode(D3NodeObject) { 
+        // Set all nodes and links to faded state
+        svg.selectAll(".node circle").classed("faded", true);
+        svg.selectAll(".links line").classed("faded", true);
+        svg.selectAll(".link-labels").classed("faded", true);
+        svg.selectAll(".node-labels").classed("faded", true);
+
+        // Highlight the current node and node labels
+        d3.select(this).classed("highlight-node", true).classed("faded", false);
+        d3.select(this.parentNode).select("text.node-labels").classed("faded", false);
+        
+        // Highlight all connected links and the nodes at their ends
+        var count = 0;
+        d3links.forEach(link => { // link refers to the D3Link object
+            // console.log(link.source, link.target, D3NodeObject)
+            // console.log(returnMatch(link, d))
+            if (link.source === D3NodeObject || link.target === D3NodeObject) {
+                count += 1;
+                // Highlight this link
+                d3.select(`#link-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`)
+                .classed("highlight-link", true)
+                .classed("faded", false);
+                              
+                // Highlight the connected nodes
+                var sourceNode = d3.select(`#node-${link.source.id.replace(/\s+/g, '-')}`);
+                var targetNode = d3.select(`#node-${link.target.id.replace(/\s+/g, '-')}`);
+                sourceNode.classed("highlight-node", true).classed("faded", false);
+                d3.select(sourceNode.node().parentNode).select("text.node-labels").classed("faded", false);
+                targetNode.classed("highlight-node", true).classed("faded", false);
+                d3.select(targetNode.node().parentNode).select("text.node-labels").classed("faded", false);
+            }
+        })
+        
+        console.log("count: ", count);
+    }
+
+    function returnMatch(link, d) {
+        if (link.source === d || link.target === d) {
+            return [link.source.id, d.id];
+        } else {
+            return "no match";
+        }
+    }
+
+    // Function to reset highlights
+    function resetHighlights() {
+        svg.selectAll(".node circle").classed("highlight-node", false).classed("faded", false);
+        svg.selectAll(".links line").classed("highlight-link", false).classed("faded", false);
+        svg.selectAll(".link-labels").classed("faded", false);
+        svg.selectAll(".node-labels").classed("faded", false);
     }
 
 })();

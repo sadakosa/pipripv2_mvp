@@ -2,11 +2,12 @@ body {
     background-color: lightgrey;
 }
 
-.links line {
+.normal-lines {
     stroke: #aaa;
+    stroke-width: 2;
 }
 
-.nodes circle {
+.node circle {
     pointer-events: all;
     stroke: none;
     stroke-width: 40px;
@@ -37,6 +38,22 @@ pre {
 .key {
     color: red;
 }
+
+/* hover over */
+
+.highlight-node {
+    fill: orange; /* Change fill color when node is highlighted */
+}
+
+.highlight-link {
+    stroke: red; /* Change stroke color when link is highlighted */
+    stroke-width: 3px; /* Make link stroke wider when highlighted */
+}
+
+.faded {
+    opacity: 0.1; /* Fade unhighlighted nodes and links */
+}
+
 
 
 /* --------- Sidebar --------- */
