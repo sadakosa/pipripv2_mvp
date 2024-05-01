@@ -7,9 +7,9 @@
     </div>
     <div class="container">
         <svg class="border rounded mt-3" style="background-color:white"></svg>
-        <form id="input_form" action="/process_input" method="POST">
+        <!-- <form id="input_form" action="/process_input" method="POST">
             <label for="paper_id">Enter Semantic Scholar or Arxiv ID:</label>
-            <input type="text" id="paper_id" name="paper_id">
+            <input type="text" id="paper_id" name="paper_id" placeholder="Paper ID">
 
             <input type="checkbox" id="citations_checkbox" name="citations_checkbox" value="on"><br>
             <label for="citations_checkbox">Citations</label>
@@ -17,12 +17,39 @@
             <input type="checkbox" id="references_checkbox" name="references_checkbox" value="on"><br>
             <label for="references_checkbox">References</label>
 
-            <button type="submit">Submit</button>
+            <button type="submit" class="button">Submit</button>
         </form>
-        <div id="progress_text" style="display:none;">Building graph...</div>
+        <div id="progress_text" style="display:none;" >Building graph...</div>
 
-        <button id="clear_button">Clear Graph</button>
+        <button id="clear_button" class="button">Clear Graph</button>
         <script type="text/javascript" src="static/js/clear_button.js"></script>
+
+        <label class="toggle">
+            <input type="checkbox" id="levelToggle">
+            <div class="slider round"></div>
+        </label> -->
+
+
+
+        <!-- New structure for form and controls -->
+        <div class="flex-container">
+            <form id="input_form" action="/process_input" method="POST" class="form-side">
+                <label for="paper_id">Enter Semantic Scholar or Arxiv ID:</label>
+                <input type="text" id="paper_id" name="paper_id" placeholder="Paper ID">
+
+                <input type="checkbox" id="citations_checkbox" name="citations_checkbox" value="on"><br>
+                <label for="citations_checkbox">Citations</label>
+
+                <input type="checkbox" id="references_checkbox" name="references_checkbox" value="on"><br>
+                <label for="references_checkbox">References</label>
+
+                <button type="submit" class="button">Submit</button>
+            </form>
+
+            <div class="controls-side">
+                <div id="progress_text" style="display:none;">Building graph...</div>
+                <button id="clear_button" class="button">Clear Graph</button>
+                <script type="text/javascript" src="static/js/clear_button.js"></script>
 
         <label class="toggle">
             <input type="checkbox" id="levelToggle">
@@ -47,7 +74,7 @@
         </div>
     </div>
 </div>
-<script type="module" src="/static/js/modified_index_toggle.js" charset="utf-8"></script>
+<script type="module" src="/static/js/modified_index_vF.js" charset="utf-8"></script>
 
 
 {% endblock %}

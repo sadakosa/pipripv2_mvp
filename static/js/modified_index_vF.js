@@ -24,10 +24,10 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             d3nodes.push(new D3PaperNode(
                 node.id,
 //                node.arxiv_id,
-//                node.url,
+                node.url,
 //                node.citation_count,
                 node.title,
-                node.authors,
+                node.authors.join(', '),
                 node.abstract
 //                node.publication_date,
 //                node.references
@@ -91,13 +91,18 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
 
     // Append text labels to each link
     var linkLabel = g.append("g")
-        .attr("class", "link-labels")
         .selectAll("text")
         .data(d3links)
-        .enter().append("text")
-        .attr("text-anchor", "middle") // Ensure labels are centered along the link
-        .attr("font-size", "10px")
-        .text(d => d.getLabel()); 
+        .enter()
+        .append("text")
+            .attr("text-anchor", "middle") // Ensure labels are centered along the link
+            .attr("font-size", "10px")
+            .attr("class", "link-labels")
+            // .attr("id", d => `link-label-${d.getLabel().replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
+            .attr("id", d => `link-label-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
+            .text(d => d.getLabel());
+
+
     
     var node = g.append("g")
         .attr("class", "node")
@@ -126,10 +131,15 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
             if (D3NodeObject.type === "topic") {
                 updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.id}` + "<br> <b>Description:</b> " + D3NodeObject.description);
             } else if (D3NodeObject.type === "paper") {
-                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
+                updateSidebar(`<b>Hovered on node:</b> ${D3NodeObject.title}<br> <b>Authors:</b> ${D3NodeObject.authors}<br> <b><a href=${D3NodeObject.url} target="_blank">Link</a></b><br> <b>Abstract:</b> ${D3NodeObject.abstract}`);
             }
         })
-        .on("mouseout", resetHighlights);
+        .on("mouseout", resetHighlights)
+        .on("click", function(D3NodeObject) {
+            if (D3NodeObject.url) {
+                window.open(D3NodeObject.url, '_blank');
+            }
+        });
     
     // Append text to each node group
     node.append("text")
@@ -339,7 +349,10 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
                 d3.select(`#link-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`)
                 .classed("highlight-link", true)
                 .classed("faded", false);
-                              
+
+                // Highlight the link label
+                d3.select(`#link-label-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`).classed("faded", false);
+
                 // Highlight the connected nodes
                 var sourceNode = d3.select(`#node-${link.source.id.replace(/\s+/g, '-')}`);
                 var targetNode = d3.select(`#node-${link.target.id.replace(/\s+/g, '-')}`);
@@ -351,14 +364,6 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         })
         
         console.log("count: ", count);
-    }
-
-    function returnMatch(link, d) {
-        if (link.source === d || link.target === d) {
-            return [link.source.id, d.id];
-        } else {
-            return "no match";
-        }
     }
 
     // Function to reset highlights

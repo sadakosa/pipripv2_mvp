@@ -28,9 +28,10 @@ export class D3TopicNode extends D3Node {
 }
 
 export class D3PaperNode extends D3Node {
-    constructor(id, title, authors, abstract) {
+    constructor(id, url, title, authors, abstract) {
         super("paper", id);
         this.title = title;
+        this.url = url;
         this.authors = authors;
         this.abstract = abstract;
     }
@@ -40,7 +41,7 @@ export class D3PaperNode extends D3Node {
     }
 
     getDetails() {
-        return `Authors: ${this.authors}\SS ID: ${this.ss_id}\nTitle: ${this.title}\nAbstract: ${this.abstract}`;
+        return `Authors: ${this.authors}\SS ID: ${this.ss_id}\nTitle: ${this.title}\nLink: ${this.url}\nAbstract: ${this.abstract}`;
     }
 }
 
