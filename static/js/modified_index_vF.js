@@ -366,14 +366,6 @@ import { D3TopicNode, D3PaperNode, D3Link } from './d3_models.js';
         console.log("count: ", count);
     }
 
-    function returnMatch(link, d) {
-        if (link.source === d || link.target === d) {
-            return [link.source.id, d.id];
-        } else {
-            return "no match";
-        }
-    }
-
     // Function to reset highlights
     function resetHighlights() {
         svg.selectAll(".node circle").classed("highlight-node", false).classed("faded", false);
