@@ -7,14 +7,29 @@ const filterTopics = document.querySelector('#filterTopics');
 
 // SVG set up
 const width = document.documentElement.clientWidth; 
-const height = document.documentElement.clientHeight * 0.9;
+const height = document.documentElement.clientHeight;
+var w = window;
+var d = document;
+var e = d.documentElement;
 
 console.log("Width and height:");
 console.log(width, height);
 
+// var svg = d3.select("svg")
+//     .attr("preserveAspectRatio", "xMidYMid meet")
+//     .attr("viewBox", `0 0 ${width} ${height}`);
 var svg = d3.select("svg")
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .attr("viewBox", `0 0 ${width} ${height}`);
+    .attr("width", width)
+    .attr("height", height);
+
+// resize canvas when window change
+function updateWindow(){
+    x = w.innerWidth || e.clientWidth || g.clientWidth;
+    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+    svg.attr("width", x).attr("height", y);
+}
+d3.select(window).on('resize.updatesvg', updateWindow);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
