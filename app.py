@@ -12,9 +12,6 @@ db = Memgraph()
 @app.route('/')
 @app.route('/index')
 def index():
-    # db = Memgraph()
-    # db_operations.clear(db)
-    # db_operations.populate_database(db, "backend/resources/dev_data.txt")
     return render_template('index.html')
 
 @app.route('/clear_db', methods=['POST'])

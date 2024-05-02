@@ -1,9 +1,8 @@
 import json
 import os
+import uuid
 
-# from backend.api_utils.arxiv_utils import search_papers_by_arxiv_id
 from backend.api_utils.semantic_scholar_utils import get_references, get_citations
-# from backend.pdf_parsers import extract_references_from_pdf, find_arxiv_ids_in_text
 
 
 class Paper:
@@ -28,7 +27,7 @@ class Paper:
         super(Paper, paper_obj).__init__() # call any polymorphic base class initializers
 
         paper_obj.arxiv_id = arxiv_response.pdf_url.split('/')[-1]
-        paper_obj.paper_id = "arxiv-" + paper_obj.arxiv_id
+        paper_obj.paper_id = str(uuid.uuid4())
         paper_obj.url = arxiv_response.pdf_url
         paper_obj.title = arxiv_response.title
         paper_obj.abstract = arxiv_response.summary
@@ -122,13 +121,3 @@ class Paper:
         for c in citations:
             citing_paper = Paper(c.get("citingPaper"))
             self.citations.append(citing_paper)
-
-    # Manually parse references from downloaded pdf (slow and might be inaccurate depending on citation style)
-    # If the references contain arxiv IDs, batch the IDs and send arxiv request to flesh out contents
-    # def populateReferencesUsingPdf(self, pdf_path):
-    #     references_block = extract_references_from_pdf(pdf_path)
-    #     arxiv_ids = find_arxiv_ids_in_text(references_block)
-    #     results = search_papers_by_arxiv_id(arxiv_ids)
-    #     for res in results:
-    #         referenced_paper = Paper.from_arxiv(res)
-    #         self.references.append(referenced_paper)

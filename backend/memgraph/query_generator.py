@@ -1,4 +1,3 @@
-# from backend.memgraph.database.memgraph import Memgraph
 from backend.edge import Edge
 from backend.memgraph.db_utils import cleanse
 from backend.graph import Graph
