@@ -1,65 +1,65 @@
 body {
-    background-color: lightgrey;
+  background-color: lightgrey;
 }
 
 .normal-lines {
-    stroke: #aaa;
-    stroke-width: 2;
+  stroke: #aaa;
+  stroke-width: 2;
 }
 
 .node-circle {
-    pointer-events: all;
-    stroke: none;
-    stroke-width: 40px;
+  pointer-events: all;
+  stroke: none;
+  stroke-width: 40px;
 }
 
 .node-circle-hidden {
-    pointer-events: none;
-    visibility: hidden;
-    stroke: none;
-    stroke-width: 40px;
+  pointer-events: none;
+  visibility: hidden;
+  stroke: none;
+  stroke-width: 40px;
 }
 
 pre {
-    outline: 1px solid #ccc;
-    padding: 5px;
-    margin: 5px;
+  outline: 1px solid #ccc;
+  padding: 5px;
+  margin: 5px;
 }
 
 .string {
-    color: green;
+  color: green;
 }
 
 .number {
-    color: darkorange;
+  color: darkorange;
 }
 
 .boolean {
-    color: blue;
+  color: blue;
 }
 
 .null {
-    color: magenta;
+  color: magenta;
 }
 
 .key {
-    color: red;
+  color: red;
 }
 
 /* hover over */
 
 .highlight-node {
-    /* fill: orange;  */
-    opacity: 1; 
+  /* fill: orange;  */
+  opacity: 1; 
 }
 
 .highlight-link {
-    stroke: black; /* Change stroke color when link is highlighted */
-    stroke-width: 2px; /* Make link stroke wider when highlighted */
+  stroke: black; /* Change stroke color when link is highlighted */
+  stroke-width: 2px; /* Make link stroke wider when highlighted */
 }
 
 .faded {
-    opacity: 0.1; /* Fade unhighlighted nodes and links */
+  opacity: 0.1; /* Fade unhighlighted nodes and links */
 }
 
 
@@ -67,65 +67,78 @@ pre {
 /* --------- Sidebar --------- */
 
 .main-container {
-    display: flex;
-    height: 100vh; /* Adjust based on your layout needs */
+  display: flex;
+  height: 100vh; /* Adjust based on your layout needs */
 }
 
 .sidebar {
-    width: 20%; /* Adjust the width of the sidebar */
-    background-color: #f4f4f4; /* Background color for the sidebar */
-    padding: 20px;
-    overflow-y: auto; /* Enables scroll if content is too long */
+  width: 20%; /* Adjust the width of the sidebar */
+  background-color: #f4f4f4; /* Background color for the sidebar */
+  padding: 20px;
+  overflow-y: auto; /* Enables scroll if content is too long */
 }
 
 svg {
-    /* width: 100%;
-    height: 100%; */
-    max-width: none;  /* Ensures there's no maximum width */
-    max-height: none; /* Ensures there's no maximum height */
+  /* width: 100%;
+  height: 100%; */
+  max-width: none;  /* Ensures there's no maximum width */
+  max-height: none; /* Ensures there's no maximum height */
 }
 
 .container {
-    display: flex; /* Establishes a flex container */
-    flex-grow: 1; /* Takes up remaining space */
-    overflow: hidden; /* Prevents overflow issues */
-    flex-direction: column; /* Stacks children vertically */
-    align-items: stretch; /* Stretches children to fit the width of the container */
-    height: 100%; /* Full height */
+  display: flex; /* Establishes a flex container */
+  flex-grow: 1; /* Takes up remaining space */
+  overflow: hidden; /* Prevents overflow issues */
+  flex-direction: column; /* Stacks children vertically */
+  align-items: stretch; /* Stretches children to fit the width of the container */
+  height: 100%; /* Full height */
 }
 
 #input_form {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: left;
-    gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: left;
+  gap: 10px;
 }
 
 #input_form label {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 /*--------- END sidebar --------*/
 
 /*--------- interactive elements below svg --------*/
 
 .flex-container {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 .form-side {
-    flex: 1; /* Takes up half of the space */
-    padding: 20px; /* Padding for aesthetic spacing */
+  flex: 1; /* Takes up half of the space */
+  padding: 20px; /* Padding for aesthetic spacing */
+  flex-direction: column; /* Ensures elements are stacked vertically */
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically within each row */
+  align-items: flex-start; /* Aligns items to the left */
+  width: 100%; /* Full width of the form */
+  margin-bottom: 10px; /* Space between rows */
+}
+
+#input_form label {
+  margin-bottom: 5px; /* Space between label and input */
 }
 
 .controls-side {
-    flex: 1; /* Takes up the remaining half */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
-    padding: 20px;
+  flex: 1; /* Takes up the remaining half */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  padding: 20px;
 }
 
 /*--------- END interactive elements below svg --------*/
@@ -134,179 +147,236 @@ svg {
 
 /* --------- Toggle --------- */
 .toggle {
-    position: relative;
-    display: inline-block;
-    width: 120px;
-    height: 34px;
-  }
-  
-  .toggle input {display:none;}
-  
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #404040;
-    -webkit-transition: .4s;
-    transition: .4s;
-     border-radius: 34px;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  input:checked + .slider {
-    background-color: #21b8b5;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #21b8b5;
-  }
-  
-  input:checked + .slider:before {
-    /* -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(55px); */
-    -webkit-transform: translateX(43px);
-    -ms-transform: translateX(43px);
-    transform: translateX(86px);
-  }
-  
-  .slider:after
-  {
-   content:'Level 2';
-   color: white;
-   display: block;
-   position: absolute;
-   transform: translate(-50%,-50%);
-   top: 50%;
-   left: 50%;
-   font-size: 10px;
-   font-family: Verdana, sans-serif;
-  }
-  
-  input:checked + .slider:after
-  {  
-    content:'Level 1';
-  }
-  
+  position: relative;
+  display: inline-block;
+  width: 120px;
+  height: 34px;
+}
+
+.toggle input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #404040;
+  -webkit-transition: .4s;
+  transition: .4s;
+   border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #21b8b5;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #21b8b5;
+}
+
+input:checked + .slider:before {
+  /* -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(55px); */
+  -webkit-transform: translateX(43px);
+  -ms-transform: translateX(43px);
+  transform: translateX(86px);
+}
+
+.slider:after
+{
+ content:'Detailed View';
+ color: white;
+ display: block;
+ position: absolute;
+ transform: translate(-50%,-50%);
+ top: 50%;
+ left: 50%;
+ font-size: 10px;
+ font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider:after
+{  
+  content:'Abstract View';
+}
+
 
 
 /* --------- Filter --------- */
 /* The switch - the box around the slider */
 .filterToggle {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-  
-  /* Hide default HTML checkbox */
-  .filterToggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  /* The slider */
-  .filterSlider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-    border-radius: 34px;
-  }
-  
-  .filterSlider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  input:checked + .filterSlider {
-    background-color: #404040;
-  }
-  
-  input:focus + .filterSlider {
-    box-shadow: 0 0 1px #404040;
-  }
-  
-  input:checked + .filterSlider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.filterToggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.filterSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.filterSlider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .filterSlider {
+  background-color: #404040;
+}
+
+input:focus + .filterSlider {
+  box-shadow: 0 0 1px #404040;
+}
+
+input:checked + .filterSlider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
 /*--------- END TOGGLE --------*/
 
 /*--------- BUTTON --------*/
 
 .button {
-  background-color: #f8f9fa;
-  border: 1px solid #f8f9fa;
-  border-radius: 4px;
-  color: #3c4043;
-  cursor: pointer;
-  font-family: arial,sans-serif;
-  font-size: 14px;
-  height: 36px;
-  line-height: 27px;
-  min-width: 54px;
-  padding: 0 16px;
-  text-align: center;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: pre;
-  margin: 10px 0; /* Spacing between buttons */
+background-color: #f8f9fa;
+border: 1px solid #f8f9fa;
+border-radius: 4px;
+color: #3c4043;
+cursor: pointer;
+font-family: arial,sans-serif;
+font-size: 14px;
+height: 36px;
+line-height: 27px;
+min-width: 54px;
+padding: 0 16px;
+text-align: center;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+white-space: pre;
+margin: 10px 0; /* Spacing between buttons */
 }
 
 .button:hover {
-  border-color: #dadce0;
-  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
-  color: #202124;
+border-color: #dadce0;
+box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+color: #202124;
 }
 
 .button:focus {
-  border-color: #4285f4;
-  outline: none;
+border-color: #4285f4;
+outline: none;
 }
 
 /*--------- END BUTTON --------*/
 
 input {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
 }
 
 
 
-/* --------- Tooltip --------- */
+/* --------- checkboxes --------- */
+
+
+
+.checkbox-row {
+  display: flex;
+  align-items: left; /* Aligns items vertically centered */
+  margin-bottom: 10px; /* Space between rows */
+}
+
+.checkbox-row input[type="checkbox"] {
+  accent-color: #21b8b5; /* Changes the color of the checkbox */
+  margin-right: 8px; /* Space between the checkbox and the label */
+}
+
+.checkbox-row label {
+  margin: 0; /* Removes default margin to give more control */
+  font-size: 16px; /* Increases the font size for readability */
+  color: #333; /* Darker text for better readability */
+  user-select: none; /* Prevents text selection */
+}
+
+/* Beautify Checkboxes */
+.checkbox {
+  -webkit-appearance: none; /* Removes default system appearance */
+  appearance: none;
+  background-color: #f0f0f0;
+  margin: 0;
+  font: inherit;
+  color: currentColor;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px; /* Rounded corners for the checkbox */
+  transform: translateY(-0.075em); /* Aligns checkbox slightly for optical alignment */
+  display: grid;
+  place-content: center;
+}
+
+.checkbox:checked {
+  background-color: #21b8b5;
+  border-color: #21b8b5;
+}
+
+.checkbox:checked::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  clip-path: polygon(14% 44%, 34% 64%, 76% 23%, 68% 15%, 34% 48%, 24% 37%);
+  background-color: #fff;
+  display: block;
+}
+
+.checkbox:focus {
+  outline: none;
+  border-color: #4285f4;
+  box-shadow: 0 0 0 3px rgba(66,133,244,0.5); /* Focus ring */
+}
