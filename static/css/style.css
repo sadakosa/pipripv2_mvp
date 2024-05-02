@@ -58,6 +58,10 @@ pre {
     stroke-width: 2px; /* Make link stroke wider when highlighted */
 }
 
+.highlight-link-label {
+    opacity: 1; 
+}
+
 .faded {
     opacity: 0.1; /* Fade unhighlighted nodes and links */
 }
@@ -113,10 +117,49 @@ svg {
     width: 100%;
 }
 
+
+
+/* FORM */
+
 .form-side {
     flex: 1; /* Takes up half of the space */
     padding: 20px; /* Padding for aesthetic spacing */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    font-family: Arial, sans-serif; /* Sets a more neutral, professional font */
 }
+
+.form-row {
+    margin-bottom: 10px; /* Adds space between form rows */
+}
+
+.checkboxes {
+    display: flex; /* Enables flexbox */
+    justify-content: center; /* Center checkboxes horizontally */
+    gap: 30px; /* Adds space between checkboxes */
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center; /* Centers checkbox and label vertically */
+    cursor: pointer; /* Indicates that the element is clickable */
+}
+
+.checkbox-container input[type="checkbox"] {
+    accent-color: #2196F3; /* Changes the color of the checkbox */
+    margin-right: 8px; /* Adds space between the checkbox and the label */
+}
+
+.checkbox-container label {
+    margin: 0; /* Removes default margin to give you more control */
+    font-size: 16px; /* Increases the font size for readability */
+    color: #333; /* Darker text for better readability */
+}
+
+
+
+
+/* CONTROLS */
 
 .controls-side {
     flex: 1; /* Takes up the remaining half */
@@ -127,6 +170,28 @@ svg {
     padding: 20px;
 }
 
+.controls-row {
+    width: 100%; /* Ensure each row takes the full width available */
+    display: flex;
+    justify-content: center; /* Center the contents of each row */
+    margin-bottom: 10px; /* Space between rows */
+}
+
+.controls-row.split {
+    justify-content: space-between; /* Distributes space evenly between the two halves */
+}
+
+.half {
+    flex: 1; /* Each side takes half of the space */
+    display: flex;
+    justify-content: center; /* Center the toggle and filters within each half */
+    align-items: center; /* Vertically aligns items in the middle */
+}
+
+
+
+
+
 /*--------- END interactive elements below svg --------*/
 
 
@@ -135,7 +200,7 @@ svg {
 .toggle {
     position: relative;
     display: inline-block;
-    width: 120px;
+    width: 140px;
     height: 34px;
   }
   
@@ -181,12 +246,12 @@ svg {
     transform: translateX(55px); */
     -webkit-transform: translateX(43px);
     -ms-transform: translateX(43px);
-    transform: translateX(86px);
+    transform: translateX(10oi4px);
   }
   
   .slider:after
   {
-   content:'Level 2';
+   content:'Detailed View';
    color: white;
    display: block;
    position: absolute;
@@ -199,7 +264,7 @@ svg {
   
   input:checked + .slider:after
   {  
-    content:'Level 1';
+    content:'Abstract View';
   }
   
 
@@ -282,6 +347,7 @@ svg {
   touch-action: manipulation;
   white-space: pre;
   margin: 10px 0; /* Spacing between buttons */
+  width: 100%; /* Makes the button expand to fill the form row */
 }
 
 .button:hover {
