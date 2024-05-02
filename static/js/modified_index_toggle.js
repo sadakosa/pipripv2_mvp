@@ -243,7 +243,7 @@ filterTopics.addEventListener('click', () => {
 function isPaper(id) {
     // hacky way to check if the node is a paper or topic node from the id
     // to check if the edge is a paper-paper / paper-topic / topic-topic edge
-    return id.length == 40 && /\d/.test(id) && id.indexOf(' ') == -1
+    return id.startsWith('arxiv') || (id.length == 40 && /\d/.test(id) && id.indexOf(' ') == -1)
 }
 
 function generateSvgGraph(graph) {
