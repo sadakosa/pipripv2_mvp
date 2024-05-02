@@ -24,8 +24,8 @@ var svg = d3.select("svg")
 
 // resize canvas when window change
 function updateWindow(){
-    x = w.innerWidth || e.clientWidth || g.clientWidth;
-    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+    let x = w.innerWidth || e.clientWidth || g.clientWidth;
+    let y = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
     svg.attr("width", x).attr("height", y);
 }
@@ -502,7 +502,7 @@ function generateSvgGraph(graph) {
         // Set all nodes and links to faded state
         svg.selectAll(".node circle").classed("faded", true);
         svg.selectAll(".links line").classed("faded", true);
-        svg.selectAll(".link-labels").classed("faded", true);
+        svg.selectAll(".link-labels").selectAll("text").classed("faded", true);
         svg.selectAll(".node-labels").classed("faded", true);
 
         // Highlight the current node and node labels
