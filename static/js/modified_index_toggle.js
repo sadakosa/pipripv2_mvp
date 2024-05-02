@@ -37,6 +37,13 @@ var simulation = d3.forceSimulation()
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
 
+// Add legend to the graph
+var legend = svg.append("g");
+legend.append("circle").attr("cx",40).attr("cy",40).attr("r", 6).style("fill", "#80f2db")
+legend.append("circle").attr("cx",40).attr("cy",65).attr("r", 6).style("fill", "gray")
+legend.append("text").attr("x", 60).attr("y", 40).text("Topic").style("font-size", "15px").attr("alignment-baseline","middle")
+legend.append("text").attr("x", 60).attr("y", 65).text("Paper").style("font-size", "15px").attr("alignment-baseline","middle")
+
 
 var l2Graph;
 var l1Graph;
