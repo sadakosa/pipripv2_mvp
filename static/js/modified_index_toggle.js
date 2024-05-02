@@ -7,20 +7,42 @@ const filterTopics = document.querySelector('#filterTopics');
 
 // SVG set up
 const width = document.documentElement.clientWidth; 
-const height = document.documentElement.clientHeight * 0.9;
+const height = document.documentElement.clientHeight;
+var w = window;
+var d = document;
+var e = d.documentElement;
 
 console.log("Width and height:");
 console.log(width, height);
 
+// var svg = d3.select("svg")
+//     .attr("preserveAspectRatio", "xMidYMid meet")
+//     .attr("viewBox", `0 0 ${width} ${height}`);
 var svg = d3.select("svg")
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .attr("viewBox", `0 0 ${width} ${height}`);
+    .attr("width", width)
+    .attr("height", height);
+
+// resize canvas when window change
+function updateWindow(){
+    let x = w.innerWidth || e.clientWidth || g.clientWidth;
+    let y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+    svg.attr("width", x).attr("height", y);
+}
+d3.select(window).on('resize.updatesvg', updateWindow);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(300)) // Increase the distance value to spread out the nodes
     .force("charge", d3.forceManyBody().strength(-500)) // Increase the magnitude of negative strength
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force("collide", d3.forceCollide().radius(10)); // Add a collision force to prevent overlap of nodes
+
+// Add legend to the graph
+var legend = svg.append("g");
+legend.append("circle").attr("cx",40).attr("cy",40).attr("r", 6).style("fill", "#80f2db")
+legend.append("circle").attr("cx",40).attr("cy",65).attr("r", 6).style("fill", "gray")
+legend.append("text").attr("x", 60).attr("y", 40).text("Topic").style("font-size", "15px").attr("alignment-baseline","middle")
+legend.append("text").attr("x", 60).attr("y", 65).text("Paper").style("font-size", "15px").attr("alignment-baseline","middle")
 
 
 var l2Graph;
@@ -243,7 +265,7 @@ filterTopics.addEventListener('click', () => {
 function isPaper(id) {
     // hacky way to check if the node is a paper or topic node from the id
     // to check if the edge is a paper-paper / paper-topic / topic-topic edge
-    return id.length == 40 && /\d/.test(id) && id.indexOf(' ') == -1
+    return id.startsWith('arxiv') || (id.length == 40 && /\d/.test(id) && id.indexOf(' ') == -1)
 }
 
 function generateSvgGraph(graph) {
@@ -340,7 +362,7 @@ function generateSvgGraph(graph) {
         .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
-                return `#FFF0F5`;
+                return `#80f2db`;
             } else if (d.type === "paper") {
                 return `gray`;
             }
@@ -487,7 +509,7 @@ function generateSvgGraph(graph) {
         // Set all nodes and links to faded state
         svg.selectAll(".node circle").classed("faded", true);
         svg.selectAll(".links line").classed("faded", true);
-        svg.selectAll(".link-labels").classed("faded", true);
+        svg.selectAll(".link-labels").selectAll("text").classed("faded", true);
         svg.selectAll(".node-labels").classed("faded", true);
 
         // Highlight the current node and node labels
