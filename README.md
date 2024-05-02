@@ -1,6 +1,8 @@
 # PiP RIP 
 ### _Papers into Perspectives – Research Intelligence Processor_
 
+![graphScreenshot](image.png)
+
 ### Introduction
 Have you ever found yourself embarking on a research project, only to feel overwhelmed the moment you start exploring the topic? It's a common hurdle for researchers and students alike—entering a keyword and being inundated with hundreds of papers, each seemingly more complex than the last.
 
