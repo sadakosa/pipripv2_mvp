@@ -73,10 +73,10 @@ def get_l1_graph():
         jsonify(db_operations.get_l1_graph(db)), 200)
     return response
 
-@app.route('/get-nodes', methods=["POST"])
+@app.route('/get-papers', methods=["POST"])
 def get_nodes():
     response = make_response(
-        jsonify(db_operations.get_nodes(db)), 200)
+        jsonify(db_operations.get_papers(db)), 200)
     return response
 
 @app.route('/get-relationships', methods=["POST"])

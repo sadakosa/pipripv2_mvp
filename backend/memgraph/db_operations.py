@@ -23,20 +23,10 @@ def populate_database(db, path):
 # def generate_shared_author_edges(db):
 #     pass
 
-def get_nodes(db):
+def get_papers(db):
     command = "MATCH (n:Paper) RETURN n;"
     papers = db.execute_and_fetch(command)
-    command = "MATCH (n:Topic) RETURN n;"
-    topics = db.execute_and_fetch(command)
-
     node_objects = []
-    for topic in topics:
-        n = topic['n']
-        data = {
-            "id": n.properties['id'],
-            "description": n.properties['description']
-        }
-        node_objects.append(data)
 
     for paper in papers:
         n = paper['n']
