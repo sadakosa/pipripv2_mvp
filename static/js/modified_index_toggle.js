@@ -378,7 +378,7 @@ function generateSvgGraph(graph) {
             if (d.type === "topic") {
                 return `#80f2db`;
             } else if (d.type === "paper") {
-                return `gray`;
+                return `lightgray`;
             }
         })
         .on("mouseover", function(D3NodeObject) {
