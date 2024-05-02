@@ -1,6 +1,6 @@
 import { D3TopicNode, D3PaperNode, D3Link, D3Graph } from './d3_models.js';
 
-const toggle = document.querySelector('#levelToggle');
+// const toggle = document.querySelector('#levelToggle');
 const filterPapers = document.querySelector('#filterPapers');
 const filterTopics = document.querySelector('#filterTopics');
 const filterCited = document.querySelector('#filterCited');
@@ -64,54 +64,54 @@ getL2Graph()
 
 
 
-// Level toggle
-// function toggleLevel() {
-toggle.addEventListener('click', () => {
-    isLevel2 = !isLevel2;
-    console.log("Toggle level");
+// // Level toggle
+// // function toggleLevel() {
+// toggle.addEventListener('click', () => {
+//     isLevel2 = !isLevel2;
+//     console.log("Toggle level");
 
-    // d3.select("svg").select("g").selectAll("g").exit().remove();
-    // d3.select("svg").selectAll("g").exit().remove();
-    svg.selectAll("*").remove();
+//     // d3.select("svg").select("g").selectAll("g").exit().remove();
+//     // d3.select("svg").selectAll("g").exit().remove();
+//     svg.selectAll("*").remove();
 
 
-    if (isLevel2) {
-        if (!l2Graph) {
-            console.log("fetch l2 graph");
-            getL2Graph()
-            .then(
-                (graph) => {
-                    l2Graph = graph;
-                    console.log(graph);
-                    generateSvgGraph(graph);
-                },
-                error => console.log(error)
-            )
-        } else {
-            console.log("no need fetch l2graph");
-            console.log(l2Graph);
-            generateSvgGraph(l2Graph);
-        }
-    } else {
-        if (!l1Graph) {
-            getL1Graph()
-            .then(
-                (graph) => {
-                    console.log(graph);
-                    l1Graph = graph;
-                    generateSvgGraph(graph);
-                },
-                error => console.log(error)
-            )
-        } else {
-            generateSvgGraph(l1Graph);
-        }
-        // let graph = dummygraph();
-        // l1Graph = graph;
-        // generateSvgGraph(graph);
-    }
+//     if (isLevel2) {
+//         if (!l2Graph) {
+//             console.log("fetch l2 graph");
+//             getL2Graph()
+//             .then(
+//                 (graph) => {
+//                     l2Graph = graph;
+//                     console.log(graph);
+//                     generateSvgGraph(graph);
+//                 },
+//                 error => console.log(error)
+//             )
+//         } else {
+//             console.log("no need fetch l2graph");
+//             console.log(l2Graph);
+//             generateSvgGraph(l2Graph);
+//         }
+//     } else {
+//         if (!l1Graph) {
+//             getL1Graph()
+//             .then(
+//                 (graph) => {
+//                     console.log(graph);
+//                     l1Graph = graph;
+//                     generateSvgGraph(graph);
+//                 },
+//                 error => console.log(error)
+//             )
+//         } else {
+//             generateSvgGraph(l1Graph);
+//         }
+//         // let graph = dummygraph();
+//         // l1Graph = graph;
+//         // generateSvgGraph(graph);
+//     }
 
-});
+// });
 
 async function getL2Graph() {
     let response = await fetch(`${window.origin}/get-graph`, {
