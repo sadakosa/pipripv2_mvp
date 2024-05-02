@@ -10,7 +10,7 @@
 
         <!-- New structure for form and controls -->
         <div class="flex-container">
-            <form id="input_form" action="/process_input" method="POST" class="form-side">
+            <!-- <form id="input_form" action="/process_input" method="POST" class="form-side">
                 <label for="paper_id">Enter Semantic Scholar or Arxiv ID:</label>
                 <input type="text" id="paper_id" name="paper_id" placeholder="Paper ID">
 
@@ -28,38 +28,61 @@
                     <button type="submit" class="button">Submit</button>
                 </div>
                 <div id="progress_text" style="display:none;">Building graph...</div>
+            </form> -->
+
+            <form id="input_form" action="/process_input" method="POST" class="form-side">
+                <div class="form-row">
+                    <label for="paper_id">Enter Semantic Scholar or Arxiv ID:</label>
+                    <input type="text" id="paper_id" name="paper_id" placeholder="Paper ID">
+                </div>
+            
+                <div class="form-row checkbox-row">
+                    <input type="checkbox" id="citations_checkbox" name="citations_checkbox" class="checkbox" value="on">
+                    <label for="citations_checkbox">Citations</label>
+                </div>
+                
+                <div class="form-row checkbox-row">
+                    <input type="checkbox" id="references_checkbox" name="references_checkbox" class="checkbox" value="on">
+                    <label for="references_checkbox">References</label>
+                </div>
+            
+                <div class="form-row">
+                    <button type="submit" class="button">Submit</button>
+                </div>
             </form>
 
             <div class="controls-side">
                 <button id="clear_button" class="button">Clear Graph</button>
                 <script type="text/javascript" src="static/js/clear_button.js"></script>
 
-        <label class="toggle">
-            <input type="checkbox" id="levelToggle">
-            <div class="slider round"></div>
-        </label>
+                <label class="toggle">
+                    <input type="checkbox" id="levelToggle">
+                    <div class="slider round"></div>
+                </label>
 
-        <div id="filterList" class="filterList">
-            <div class="filterListItem">
-                <label class="filterToggle">
-                    <input type="checkbox" id="filterPapers" checked>
-                    <span class="filterSlider"></span>
-                </label>
-                Papers
-            </div>
-            <div class="filterListItem">
-                <label class="filterToggle">
-                    <input type="checkbox" id="filterTopics" checked>
-                    <span class="filterSlider"></span>
-                </label>
-                Topics
-            </div>
-            <div class="filterListItem">
-                <label class="filterToggle">
-                    <input type="checkbox" id="filterCited" checked>
-                    <span class="filterSlider"></span>
-                </label>
-                CitedBy
+                <div id="filterList" class="filterList">
+                    <div class="filterListItem">
+                        <label class="filterToggle">
+                            <input type="checkbox" id="filterPapers" checked>
+                            <span class="filterSlider"></span>
+                        </label>
+                        Papers
+                    </div>
+                    <div class="filterListItem">
+                        <label class="filterToggle">
+                            <input type="checkbox" id="filterTopics" checked>
+                            <span class="filterSlider"></span>
+                        </label>
+                        Topics
+                    </div>
+                    <div class="filterListItem">
+                        <label class="filterToggle">
+                            <input type="checkbox" id="filterCited" checked>
+                            <span class="filterSlider"></span>
+                        </label>
+                        CitedBy
+                    </div>
+                </div>
             </div>
         </div>
     </div>
