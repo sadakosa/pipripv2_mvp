@@ -279,9 +279,9 @@ function generateSvgGraph(graph) {
         .append("line")
             .attr("id", d => {
                 if (typeof d.source === 'string') {
-                    return `link-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`
+                    return `link-${d.source.replace(/\s+/g, '-').replace(/\./g, '-')}-${d.target.replace(/\s+/g, '-').replace(/\./g, '-')}`
                 }
-                return `link-${d.source.id.replace(/\s+/g, '-')}-${d.target.id.replace(/\s+/g, '-')}`
+                return `link-${d.source.id.replace(/\s+/g, '-').replace(/\./g, '-')}-${d.target.id.replace(/\s+/g, '-').replace(/\./g, '-')}`
             }) // Add ID to each link for hover over features
             .attr("class", d => {
                 if (typeof d.source === 'string') {
@@ -307,9 +307,9 @@ function generateSvgGraph(graph) {
             // .attr("id", d => `link-label-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`) // Set ID replacing spaces with hyphens
             .attr("id", d => {
                 if (typeof d.source === 'string') {
-                    return `link-label-${d.source.replace(/\s+/g, '-')}-${d.target.replace(/\s+/g, '-')}`
+                    return `link-label-${d.source.replace(/\s+/g, '-').replace(/\./g, '-')}-${d.target.replace(/\s+/g, '-').replace(/\./g, '-')}`
                 }
-                return `link-label-${d.source.id.replace(/\s+/g, '-')}-${d.target.id.replace(/\s+/g, '-')}`
+                return `link-label-${d.source.id.replace(/\s+/g, '-').replace(/\./g, '-')}-${d.target.id.replace(/\s+/g, '-').replace(/\./g, '-')}`
             }) // Add ID to each link for hover over features
             .text(d => d.getLabel())
             .attr("class", d => {
@@ -336,7 +336,7 @@ function generateSvgGraph(graph) {
     // Append circle to each node group
     node.append("circle")
         .attr("class", "node-circle")
-        .attr("id", d => `node-${d.id.replace(/\s+/g, '-')}`) // Add ID to each node for hover over features
+        .attr("id", d => `node-${d.id.replace(/\s+/g, '-').replace(/\./g, '-')}`) // Add ID to each node for hover over features
         .attr("r", 50)
         .attr("fill", d => {
             if (d.type === "topic") {
@@ -499,19 +499,21 @@ function generateSvgGraph(graph) {
         d3links.forEach(link => { // link refers to the D3Link object
             // console.log(link.source, link.target, D3NodeObject)
             // console.log(returnMatch(link, d))
+
             if (link.source === D3NodeObject || link.target === D3NodeObject) {
                 count += 1;
                 // Highlight this link
-                d3.select(`#link-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`)
+                console.log(link.source.id)
+                d3.select(`#link-${link.source.id.replace(/\s+/g, '-').replace(/\./g, '-')}-${link.target.id.replace(/\s+/g, '-').replace(/\./g, '-')}`)
                 .classed("highlight-link", true)
                 .classed("faded", false);
 
                 // Highlight the link label
-                d3.select(`#link-label-${link.source.id.replace(/\s+/g, '-')}-${link.target.id.replace(/\s+/g, '-')}`).classed("faded", false);
+                d3.select(`#link-label-${link.source.id.replace(/\s+/g, '-').replace(/\./g, '-')}-${link.target.id.replace(/\s+/g, '-').replace(/\./g, '-')}`).classed("faded", false);
 
                 // Highlight the connected nodes
-                var sourceNode = d3.select(`#node-${link.source.id.replace(/\s+/g, '-')}`);
-                var targetNode = d3.select(`#node-${link.target.id.replace(/\s+/g, '-')}`);
+                var sourceNode = d3.select(`#node-${link.source.id.replace(/\s+/g, '-').replace(/\./g, '-')}`);
+                var targetNode = d3.select(`#node-${link.target.id.replace(/\s+/g, '-').replace(/\./g, '-')}`);
                 sourceNode.classed("highlight-node", true).classed("faded", false);
                 d3.select(sourceNode.node().parentNode).select("text.node-labels").classed("faded", false);
                 targetNode.classed("highlight-node", true).classed("faded", false);
