@@ -25,6 +25,9 @@ class GeminiClient:
         # print(response.text)
         return response
 
+    def strip_special_chars(self, s):
+        return s.replace("'", "").replace("(", "").replace(")", "")
+
     # Convert paper to a json string for input to Gemini
     def convert_papers_to_json_string(self, papers: list[Paper]):
         paper_json_strings = []
@@ -58,7 +61,7 @@ class GeminiClient:
                     if not d.get("paper_ids"):  # skip topics with no linked papers
                         continue
                     topic = Topic({
-                        "id": d.get("id"),
+                        "id": self.strip_special_chars(d.get("id")),
                         "description": d.get("description")
                     })
                     topics.append(topic)
@@ -124,8 +127,8 @@ class GeminiClient:
             try:
                 json_result = json.loads(response.text)
                 for e in json_result:
-                    source = e.get("source")
-                    target = e.get("target")
+                    source = self.strip_special_chars(e.get("source"))
+                    target = self.strip_special_chars(e.get("target"))
                     source_type = "TopicL2" if source in existing_topic_ids else "TopicL1"
                     target_type = "TopicL2" if target in existing_topic_ids else "TopicL1"
                     edge = Edge({
