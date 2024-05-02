@@ -4,6 +4,8 @@ Using only the existing topics, you should generate new broader topics of betwee
 
 If applicable, you must select the edge labels from one of the following: "subdomain of", "contributor to", "tool to study", "method for", "application of". You should only invent new labels if none of these labels apply. Edges must be generated only if there is a strong connection between the topics.
 
+You should not generate reciprocal edges (if there is an existing edge with source A and target B, you should not generate a new edge with source B and target A).
+
 The output should be a JSON array of edge objects. Tne "source" field must be one of the provided input topics. The "target" field must be a newly generated topic. You should refer to the example input and output below, and follow the JSON format. You should not output anything other than the JSON array. Every topic must have at least one edge. There can be at most one edge between every unique pair of topics. Refer to the following example. Adhere to the rules strictly. Non-compliance will result in termination.
 
 Example input = "Large Language Models, Quantum Entanglement, Generative Adversarial Networks, Albert Einstein"
