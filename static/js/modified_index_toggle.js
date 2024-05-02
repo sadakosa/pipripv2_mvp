@@ -208,9 +208,9 @@ function dummygraph() {
 // ===============
 filterPapers.addEventListener('click', () => {
     showPapers = !showPapers
-    let nodes = svg.select("g").select(".node");
-    let links = svg.select("g").select(".links");
-    let linklabels = svg.select("g").select(".link-labels");
+    let nodes = svg.select(".everything").select(".node");
+    let links = svg.select(".everything").select(".links");
+    let linklabels = svg.select(".everything").select(".link-labels");
     if (showPapers) {
         nodes.selectAll("#node-paper").attr("visibility", "visible");
         nodes.selectAll("#node-paper").selectAll("circle").classed("node-circle", true);
@@ -236,9 +236,9 @@ filterPapers.addEventListener('click', () => {
 
 filterTopics.addEventListener('click', () => {
     showTopics = !showTopics
-    let nodes = svg.select("g").select(".node");
-    let links = svg.select("g").select(".links");
-    let linklabels = svg.select("g").select(".link-labels");
+    let nodes = svg.select(".everything").select(".node");
+    let links = svg.select(".everything").select(".links");
+    let linklabels = svg.select(".everything").select(".link-labels");
     if (showTopics) {
         nodes.selectAll("#node-topic").attr("visibility", "visible");
         nodes.selectAll("#node-topic").selectAll("circle").classed("node-circle", true);
@@ -264,8 +264,8 @@ filterTopics.addEventListener('click', () => {
 
 filterCited.addEventListener('click', () => {
     showCitedBy = !showCitedBy
-    let links = svg.select("g").select(".links");
-    let linklabels = svg.select("g").select(".link-labels");
+    let links = svg.select(".everything").select(".links");
+    let linklabels = svg.select(".everything").select(".link-labels");
     if (showCitedBy) {
         links.selectAll(".cited_by").attr("visibility", "visible");
         linklabels.selectAll(".cited_by").attr("visibility", "visible");
